@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CyberNexus (SIH 2026)
 ### AI-Powered Continuous Cyber Risk Quantification and Investment Optimization Platform
 
@@ -339,3 +340,6 @@ In accordance with academic and engineering transparency:
 - **Platform Name**: CyberNexus
 - **Lead Engineering Team**: Antigravity Lead Engineering Team
 - **Submission Status**: **SIH 26105 SUBMISSION READY**
+=======
+# PIXELPALS2026-CYBERNEXUS
+>>>>>>> 409f41ba0066a147a6fb7c89e3097063b913f79a

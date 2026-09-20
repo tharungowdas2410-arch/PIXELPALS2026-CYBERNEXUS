@@ -338,7 +338,7 @@ In accordance with academic and engineering transparency:
 ## Submission Sign-Off
 - **SIH 2026 Problem Statement**: 26105
 - **Platform Name**: CyberNexus
-- **Lead Engineering Team**: Antigravity Lead Engineering Team
+- **Lead Engineering Team**: Tharun and team
 - **Submission Status**: **SIH 26105 SUBMISSION READY**
 =======
 # PIXELPALS2026-CYBERNEXUS

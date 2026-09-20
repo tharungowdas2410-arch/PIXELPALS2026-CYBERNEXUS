@@ -126,8 +126,8 @@ export default function DemoPage() {
         description="Interactive 11-scene storytelling presentation deck demonstrating continuous telemetry, risk drift, attack graph escalation, financial loss quantification, OR-Tools optimization, grounded AI reasoning, and blockchain evidence."
         badges={
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-amber-500/40 bg-amber-950/30 px-2.5 py-1 text-xs font-semibold text-amber-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
               DEMO / SYNTHETIC STORYTELLER
             </span>
             <StatusBadge status="OPERATIONAL" size="sm" />
@@ -140,7 +140,7 @@ export default function DemoPage() {
               size="sm"
               onClick={() => resetMutation.mutate()}
               disabled={resetMutation.isPending}
-              className="border-rose-500/30 bg-rose-950/20 text-rose-300 hover:bg-rose-950/40 text-xs"
+              className="border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 text-xs"
             >
               <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
               One-Click Reset
@@ -150,7 +150,7 @@ export default function DemoPage() {
               size="sm"
               onClick={() => sceneMutation.mutate(2)}
               disabled={sceneMutation.isPending}
-              className="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold"
+              className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold"
             >
               <Play className="h-3.5 w-3.5 mr-1.5 fill-current" />
               Start Attack Simulation
@@ -161,31 +161,31 @@ export default function DemoPage() {
 
       {/* Live System State Tracker Banner */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="border-white/10 bg-[#0c1220]/80">
+        <Card className="border-slate-200 bg-white shadow-sm">
           <CardHeader className="p-4 pb-1">
-            <CardDescription className="text-xs">Active Story Scene</CardDescription>
-            <CardTitle className="text-lg font-mono text-cyan-300">
+            <CardDescription className="text-xs text-slate-500">Active Story Scene</CardDescription>
+            <CardTitle className="text-lg font-mono text-blue-600 font-bold">
               Step {currentScene} / 11
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-1">
-            <p className="text-xs font-medium text-white truncate">
+            <p className="text-xs font-medium text-slate-900 truncate">
               {demoState?.scene_title || "Normal State"}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-[#0c1220]/80">
+        <Card className="border-slate-200 bg-white shadow-sm">
           <CardHeader className="p-4 pb-1">
-            <CardDescription className="text-xs">Enterprise Residual Risk</CardDescription>
-            <CardTitle className="text-lg font-mono text-white flex items-center gap-2">
+            <CardDescription className="text-xs text-slate-500">Enterprise Residual Risk</CardDescription>
+            <CardTitle className="text-lg font-mono text-slate-900 font-bold flex items-center gap-2">
               <span>{demoState?.current_risk?.toFixed(1) ?? "72.0"}</span>
               <span
                 className={cn(
-                  "text-xs px-1.5 py-0.5 rounded font-bold",
+                  "text-xs px-1.5 py-0.5 rounded font-bold border",
                   (demoState?.current_risk ?? 72) >= 80
-                    ? "bg-rose-500/20 text-rose-300"
-                    : "bg-sky-500/20 text-sky-300"
+                    ? "bg-rose-50 text-rose-700 border-rose-200"
+                    : "bg-blue-50 text-blue-700 border-blue-200"
                 )}
               >
                 {(demoState?.current_risk ?? 72) >= 80 ? "DRIFTED HIGH" : "OPTIMAL"}
@@ -193,37 +193,37 @@ export default function DemoPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-1">
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-500">
               Baseline: {demoState?.baseline_risk?.toFixed(1) ?? "72.0"} / 100
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-[#0c1220]/80">
+        <Card className="border-slate-200 bg-white shadow-sm">
           <CardHeader className="p-4 pb-1">
-            <CardDescription className="text-xs">Expected Annual Loss (EAL)</CardDescription>
-            <CardTitle className="text-lg font-mono text-white">
+            <CardDescription className="text-xs text-slate-500">Expected Annual Loss (EAL)</CardDescription>
+            <CardTitle className="text-lg font-mono text-slate-900 font-bold">
               {formatInr(demoState?.expected_annual_loss ?? 4500000)}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-1">
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-500">
               Exposure: {formatInr(demoState?.total_financial_exposure ?? 48200000)}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-[#0c1220]/80">
+        <Card className="border-slate-200 bg-white shadow-sm">
           <CardHeader className="p-4 pb-1">
-            <CardDescription className="text-xs">Telemetry & Alerts</CardDescription>
-            <CardTitle className="text-lg font-mono text-white flex items-center gap-2">
-              <span className="text-amber-400">{demoState?.active_alerts_count ?? 0} Alerts</span>
-              <span className="text-slate-500">·</span>
-              <span className="text-cyan-300">{demoState?.simulated_events_count ?? 0} Events</span>
+            <CardDescription className="text-xs text-slate-500">Telemetry & Alerts</CardDescription>
+            <CardTitle className="text-lg font-mono text-slate-900 font-bold flex items-center gap-2">
+              <span className="text-amber-600 font-bold">{demoState?.active_alerts_count ?? 0} Alerts</span>
+              <span className="text-slate-300">·</span>
+              <span className="text-blue-600 font-bold">{demoState?.simulated_events_count ?? 0} Events</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-1">
-            <p className="text-[11px] text-slate-400 truncate">
+            <p className="text-[11px] text-slate-500 truncate">
               Last action: {lastActionMessage ? "Executed" : "Ready for judge test"}
             </p>
           </CardContent>
@@ -231,12 +231,12 @@ export default function DemoPage() {
       </div>
 
       {/* Quick Jump Buttons Bar */}
-      <Card className="border-white/10 bg-[#0a101d] p-4">
+      <Card className="border-slate-200 bg-white shadow-sm p-4">
         <div className="flex items-center justify-between gap-2 mb-3">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
             Quick Scenario Execution Triggers
           </h3>
-          <span className="text-[11px] text-slate-500">
+          <span className="text-[11px] text-slate-400">
             Directly trigger any key milestone in the judge demo
           </span>
         </div>
@@ -245,7 +245,7 @@ export default function DemoPage() {
             variant="outline"
             size="sm"
             onClick={() => sceneMutation.mutate(1)}
-            className="text-xs border-white/10 bg-white/5 hover:bg-white/10 text-slate-200"
+            className="text-xs border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700"
           >
             1. Normal State
           </Button>
@@ -253,7 +253,7 @@ export default function DemoPage() {
             variant="outline"
             size="sm"
             onClick={() => sceneMutation.mutate(2)}
-            className="text-xs border-white/10 bg-white/5 hover:bg-white/10 text-slate-200"
+            className="text-xs border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700"
           >
             2. Attack Begins
           </Button>
@@ -261,7 +261,7 @@ export default function DemoPage() {
             variant="outline"
             size="sm"
             onClick={() => sceneMutation.mutate(3)}
-            className="text-xs border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-200"
+            className="text-xs border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-800 font-medium"
           >
             3. Risk Escalates (+12)
           </Button>
@@ -269,7 +269,7 @@ export default function DemoPage() {
             variant="outline"
             size="sm"
             onClick={() => sceneMutation.mutate(4)}
-            className="text-xs border-white/10 bg-white/5 hover:bg-white/10 text-slate-200"
+            className="text-xs border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700"
           >
             4. Threat Intel (APT29)
           </Button>
@@ -277,7 +277,7 @@ export default function DemoPage() {
             variant="outline"
             size="sm"
             onClick={() => sceneMutation.mutate(5)}
-            className="text-xs border-white/10 bg-white/5 hover:bg-white/10 text-slate-200"
+            className="text-xs border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700"
           >
             5. Attack Path Critical
           </Button>
@@ -285,7 +285,7 @@ export default function DemoPage() {
             variant="outline"
             size="sm"
             onClick={() => sceneMutation.mutate(6)}
-            className="text-xs border-white/10 bg-white/5 hover:bg-white/10 text-slate-200"
+            className="text-xs border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700"
           >
             6. Financial Exposure Shift
           </Button>
@@ -293,7 +293,7 @@ export default function DemoPage() {
             variant="outline"
             size="sm"
             onClick={() => sceneMutation.mutate(7)}
-            className="text-xs border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-200 font-semibold"
+            className="text-xs border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold"
           >
             7. Optimize ₹50 Lakh
           </Button>
@@ -301,7 +301,7 @@ export default function DemoPage() {
             variant="outline"
             size="sm"
             onClick={() => sceneMutation.mutate(9)}
-            className="text-xs border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-200"
+            className="text-xs border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700"
           >
             9. AI Explains
           </Button>
@@ -309,7 +309,7 @@ export default function DemoPage() {
             variant="outline"
             size="sm"
             onClick={() => sceneMutation.mutate(10)}
-            className="text-xs border-white/10 bg-white/5 hover:bg-white/10 text-slate-200"
+            className="text-xs border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700"
           >
             10. Blockchain Evidence
           </Button>
@@ -317,7 +317,7 @@ export default function DemoPage() {
             variant="outline"
             size="sm"
             onClick={() => sceneMutation.mutate(11)}
-            className="text-xs border-white/10 bg-white/5 hover:bg-white/10 text-slate-200"
+            className="text-xs border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700"
           >
             11. Executive Report
           </Button>
@@ -327,7 +327,7 @@ export default function DemoPage() {
       {/* 11-Scene Storytelling Visual Stepper Deck */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold tracking-wide uppercase text-slate-300">
+          <h2 className="text-sm font-semibold tracking-wide uppercase text-slate-700">
             End-to-End Judge Storyline (Scenes 1 to 11)
           </h2>
           <span className="text-xs text-slate-500">
@@ -346,12 +346,12 @@ export default function DemoPage() {
               <div
                 key={scene.scene_id}
                 className={cn(
-                  "rounded-lg border p-4 transition-all",
+                  "rounded-lg border p-4 transition-all shadow-sm",
                   isCurrent
-                    ? "border-cyan-500/60 bg-cyan-950/20 ring-1 ring-cyan-400/40 shadow-lg"
+                    ? "border-blue-500 bg-blue-50/70 ring-1 ring-blue-400 shadow-md"
                     : isPast
-                    ? "border-white/10 bg-[#0a101d]/60 opacity-80"
-                    : "border-white/5 bg-[#080d18]/40 hover:border-white/15"
+                    ? "border-slate-200 bg-white opacity-90"
+                    : "border-slate-200 bg-slate-50/70 hover:border-slate-300"
                 )}
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -361,10 +361,10 @@ export default function DemoPage() {
                       className={cn(
                         "p-2.5 rounded-lg shrink-0 mt-0.5",
                         isCurrent
-                          ? "bg-cyan-500 text-black font-bold"
+                          ? "bg-blue-600 text-white font-bold"
                           : isPast
-                          ? "bg-emerald-950/60 text-emerald-400 border border-emerald-500/30"
-                          : "bg-white/5 text-slate-400"
+                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                          : "bg-slate-100 text-slate-500 border border-slate-200"
                       )}
                     >
                       {isPast ? (
@@ -376,29 +376,29 @@ export default function DemoPage() {
 
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-cyan-400">
+                        <span className="font-mono text-xs font-bold text-blue-600">
                           SCENE {scene.scene_id}
                         </span>
-                        <h4 className="text-sm font-semibold text-white truncate">
+                        <h4 className="text-sm font-semibold text-slate-900 truncate">
                           {scene.title}
                         </h4>
                         {isCurrent && (
-                          <Badge className="bg-cyan-500/20 text-cyan-200 border-cyan-400/30 text-[10px]">
+                          <Badge className="bg-blue-100 text-blue-800 border-blue-300 text-[10px]">
                             ACTIVE IN LIVE CORE
                           </Badge>
                         )}
                       </div>
 
-                      <p className="mt-1 text-xs text-slate-300 leading-relaxed">
+                      <p className="mt-1 text-xs text-slate-600 leading-relaxed">
                         {scene.description}
                       </p>
 
-                      <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] text-slate-400 font-mono">
-                        <span>Risk Score: <strong className="text-white">{(scene.current_risk ?? scene.risk_score).toFixed(1)}</strong></span>
+                      <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] text-slate-500 font-mono">
+                        <span>Risk Score: <strong className="text-slate-900 font-semibold">{(scene.current_risk ?? scene.risk_score).toFixed(1)}</strong></span>
                         <span>·</span>
-                        <span>EAL: <strong className="text-white">{formatInr(scene.expected_annual_loss ?? scene.eal)}</strong></span>
+                        <span>EAL: <strong className="text-slate-900 font-semibold">{formatInr(scene.expected_annual_loss ?? scene.eal)}</strong></span>
                         <span>·</span>
-                        <span>Exposure: <strong className="text-white">{formatInr(scene.total_financial_exposure ?? scene.exposure)}</strong></span>
+                        <span>Exposure: <strong className="text-slate-900 font-semibold">{formatInr(scene.total_financial_exposure ?? scene.exposure)}</strong></span>
                       </div>
                     </div>
                   </div>
@@ -410,10 +410,10 @@ export default function DemoPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-xs text-slate-300 hover:text-cyan-200 hover:bg-white/5 border border-white/5"
+                          className="text-xs text-slate-700 hover:text-blue-700 hover:bg-slate-100 border border-slate-200"
                         >
                           {target.label}
-                          <ExternalLink className="h-3 w-3 ml-1.5 text-slate-500" />
+                          <ExternalLink className="h-3 w-3 ml-1.5 text-slate-400" />
                         </Button>
                       </Link>
                     )}
@@ -426,8 +426,8 @@ export default function DemoPage() {
                       className={cn(
                         "text-xs font-semibold",
                         isCurrent
-                          ? "bg-cyan-600 hover:bg-cyan-500 text-white"
-                          : "border-white/10 bg-white/5 hover:bg-white/10 text-slate-200"
+                          ? "bg-blue-600 hover:bg-blue-700 text-white"
+                          : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
                       )}
                     >
                       <Play className="h-3 w-3 mr-1 fill-current" />
@@ -442,27 +442,27 @@ export default function DemoPage() {
       </div>
 
       {/* Narrative Legend for Presentation */}
-      <Card className="border-white/10 bg-[#0a101d] p-5">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+      <Card className="border-slate-200 bg-white shadow-sm p-5">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
           Judge Presentation Narrative Core
         </h3>
-        <p className="text-xs text-slate-300 leading-relaxed mb-3">
+        <p className="text-xs text-slate-600 leading-relaxed mb-3">
           &quot;Cyber risk is not just a technical score. We continuously connect Threats, Vulnerabilities, Assets, Attack Paths, Business Impact, Financial Exposure, and Security Investments — and use AI to recommend where the organization should spend money to reduce the most risk.&quot;
         </p>
-        <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-cyan-300">
-          <span className="p-1 px-2 rounded bg-white/5 border border-white/10">TELEMETRY</span>
+        <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-blue-700 font-medium">
+          <span className="p-1 px-2 rounded bg-slate-50 border border-slate-200 text-slate-700">TELEMETRY</span>
           <span>→</span>
-          <span className="p-1 px-2 rounded bg-white/5 border border-white/10">RISK JUMP</span>
+          <span className="p-1 px-2 rounded bg-slate-50 border border-slate-200 text-slate-700">RISK JUMP</span>
           <span>→</span>
-          <span className="p-1 px-2 rounded bg-white/5 border border-white/10">ATTACK PATH</span>
+          <span className="p-1 px-2 rounded bg-slate-50 border border-slate-200 text-slate-700">ATTACK PATH</span>
           <span>→</span>
-          <span className="p-1 px-2 rounded bg-white/5 border border-white/10">FINANCIAL EAL</span>
+          <span className="p-1 px-2 rounded bg-slate-50 border border-slate-200 text-slate-700">FINANCIAL EAL</span>
           <span>→</span>
-          <span className="p-1 px-2 rounded bg-white/5 border border-white/10">₹50L OPTIMIZER</span>
+          <span className="p-1 px-2 rounded bg-slate-50 border border-slate-200 text-slate-700">₹50L OPTIMIZER</span>
           <span>→</span>
-          <span className="p-1 px-2 rounded bg-white/5 border border-white/10">AI DECISION</span>
+          <span className="p-1 px-2 rounded bg-slate-50 border border-slate-200 text-slate-700">AI DECISION</span>
           <span>→</span>
-          <span className="p-1 px-2 rounded bg-white/5 border border-white/10">BLOCKCHAIN NOTARIZATION</span>
+          <span className="p-1 px-2 rounded bg-slate-50 border border-slate-200 text-slate-700">BLOCKCHAIN NOTARIZATION</span>
         </div>
       </Card>
     </div>

@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 
 export function LoadingState({ label = "Loading intelligence…" }: { label?: string }) {
   return (
-    <div className="flex min-h-48 items-center justify-center gap-2 text-sm text-slate-400">
-      <Loader2 className="h-4 w-4 animate-spin text-cyan-300" />
+    <div className="flex min-h-48 items-center justify-center gap-2 text-sm text-slate-500 font-medium">
+      <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
       {label}
     </div>
   );
@@ -21,8 +21,8 @@ export function EmptyState({
 }) {
   return (
     <div className="flex min-h-48 flex-col items-center justify-center gap-2 text-center">
-      <Inbox className="h-8 w-8 text-slate-600" />
-      <p className="text-sm font-medium text-slate-200">{title}</p>
+      <Inbox className="h-8 w-8 text-slate-400" />
+      <p className="text-sm font-semibold text-slate-800">{title}</p>
       <p className="max-w-sm text-xs text-slate-500">{description}</p>
       {action ? <div className="mt-2">{action}</div> : null}
     </div>
@@ -38,8 +38,8 @@ export function ErrorState({
 }) {
   return (
     <div className="flex min-h-48 flex-col items-center justify-center gap-3 text-center">
-      <AlertTriangle className="h-8 w-8 text-amber-300" />
-      <p className="text-sm text-slate-200">{message}</p>
+      <AlertTriangle className="h-8 w-8 text-amber-600" />
+      <p className="text-sm text-slate-800 font-medium">{message}</p>
       {onRetry ? (
         <Button variant="secondary" size="sm" onClick={onRetry}>
           Retry

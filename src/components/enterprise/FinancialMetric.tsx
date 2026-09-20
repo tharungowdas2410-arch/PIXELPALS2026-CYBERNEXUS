@@ -31,40 +31,40 @@ export function FinancialMetric({
   return (
     <div
       className={cn(
-        "rounded-lg border border-white/10 bg-[#0c1322]/80 p-4 transition-all hover:border-cyan-500/30",
+        "rounded-lg border border-[#E2E8F0] bg-white p-4 transition-all hover:border-blue-300 shadow-xs",
         className
       )}
     >
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-slate-400">
+        <span className="text-xs font-medium text-slate-600">
           {explainerKey ? (
             <TooltipExplainer term={explainerKey}>{label}</TooltipExplainer>
           ) : (
             label
           )}
         </span>
-        <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">
+        <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
           INR
         </span>
       </div>
 
-      <p className="mt-2 font-mono text-2xl font-bold tracking-tight text-white md:text-3xl">
+      <p className="mt-2 font-mono text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
         {formatInr(amountInr)}
       </p>
 
       {(deltaInr !== undefined || deltaLabel) && (
         <div className="mt-2 flex items-center gap-1 text-xs">
           {isPositive ? (
-            <ArrowDownRight className="h-3.5 w-3.5 text-emerald-400" />
+            <ArrowDownRight className="h-3.5 w-3.5 text-emerald-600" />
           ) : isNegative ? (
-            <ArrowUpRight className="h-3.5 w-3.5 text-rose-400" />
+            <ArrowUpRight className="h-3.5 w-3.5 text-red-600" />
           ) : null}
           <span
             className={cn(
               "font-mono font-medium",
-              isPositive && "text-emerald-400",
-              isNegative && "text-rose-400",
-              sentiment === "neutral" && "text-slate-400"
+              isPositive && "text-emerald-600",
+              isNegative && "text-red-600",
+              sentiment === "neutral" && "text-slate-600"
             )}
           >
             {deltaInr !== undefined ? formatInr(Math.abs(deltaInr)) : null}{" "}

@@ -20,52 +20,52 @@ interface StatusBadgeProps {
 
 const statusConfig: Record<string, { bg: string; text: string; border: string; dot: string }> = {
   OPERATIONAL: {
-    bg: "bg-emerald-950/40",
-    text: "text-emerald-300",
-    border: "border-emerald-500/30",
-    dot: "bg-emerald-400 animate-pulse",
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    border: "border-emerald-200",
+    dot: "bg-emerald-600 animate-pulse",
   },
   OPTIMAL: {
-    bg: "bg-emerald-950/40",
-    text: "text-emerald-300",
-    border: "border-emerald-500/30",
-    dot: "bg-emerald-400",
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    border: "border-emerald-200",
+    dot: "bg-emerald-600",
   },
   RECORDED: {
-    bg: "bg-cyan-950/40",
-    text: "text-cyan-300",
-    border: "border-cyan-500/30",
-    dot: "bg-cyan-400",
+    bg: "bg-blue-50",
+    text: "text-blue-700",
+    border: "border-blue-200",
+    dot: "bg-blue-600",
   },
   CONTROLLED: {
-    bg: "bg-blue-950/40",
-    text: "text-blue-300",
-    border: "border-blue-500/30",
-    dot: "bg-blue-400",
+    bg: "bg-sky-50",
+    text: "text-sky-700",
+    border: "border-sky-200",
+    dot: "bg-sky-600",
   },
   MONITORED: {
-    bg: "bg-sky-950/40",
-    text: "text-sky-300",
-    border: "border-sky-500/30",
-    dot: "bg-sky-400",
+    bg: "bg-slate-100",
+    text: "text-slate-700",
+    border: "border-slate-200",
+    dot: "bg-slate-500",
   },
   ELEVATED: {
-    bg: "bg-amber-950/40",
-    text: "text-amber-300",
-    border: "border-amber-500/30",
-    dot: "bg-amber-400 animate-pulse",
+    bg: "bg-amber-50",
+    text: "text-amber-700",
+    border: "border-amber-200",
+    dot: "bg-amber-600 animate-pulse",
   },
   CRITICAL: {
-    bg: "bg-rose-950/40",
-    text: "text-rose-300",
-    border: "border-rose-500/30",
-    dot: "bg-rose-400 animate-pulse",
+    bg: "bg-red-50",
+    text: "text-red-700",
+    border: "border-red-200",
+    dot: "bg-red-600 animate-pulse",
   },
   DISRUPTED: {
-    bg: "bg-rose-950/40",
-    text: "text-rose-300",
-    border: "border-rose-500/30",
-    dot: "bg-rose-400 animate-pulse",
+    bg: "bg-red-50",
+    text: "text-red-700",
+    border: "border-red-200",
+    dot: "bg-red-600 animate-pulse",
   },
 };
 
@@ -77,10 +77,10 @@ export function StatusBadge({
 }: StatusBadgeProps) {
   const normKey = status.toUpperCase();
   const cfg = statusConfig[normKey] || {
-    bg: "bg-slate-900/60",
-    text: "text-slate-300",
-    border: "border-slate-700/40",
-    dot: "bg-slate-400",
+    bg: "bg-slate-100",
+    text: "text-slate-700",
+    border: "border-slate-200",
+    dot: "bg-slate-500",
   };
 
   return (

@@ -149,11 +149,11 @@ export default function SecurityOperationsPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <Badge variant="outline" className="border-emerald-500/40 bg-emerald-950/30 text-emerald-300 text-xs gap-1.5 py-0.5">
-              <Radio className="h-3 w-3 text-emerald-400" />
+            <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-700 text-xs gap-1.5 py-0.5 font-semibold">
+              <Radio className="h-3 w-3 text-emerald-600" />
               LIVE TELEMETRY INGESTION STREAM
             </Badge>
-            <Badge variant="outline" className="border-amber-500/40 bg-amber-950/30 text-amber-300 text-xs">
+            <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-800 text-xs font-semibold">
               DEMO MODE — SYNTHETIC SECURITY TELEMETRY
             </Badge>
           </div>
@@ -169,9 +169,9 @@ export default function SecurityOperationsPage() {
             size="sm"
             onClick={() => handleSimulateBurst("SIEM")}
             disabled={simulating}
-            className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 gap-1.5 text-xs"
+            className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 gap-1.5 text-xs shadow-2xs"
           >
-            {simulating ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5 text-cyan-400" />}
+            {simulating ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5 text-blue-600" />}
             Simulate Auth Burst
           </Button>
 
@@ -179,9 +179,9 @@ export default function SecurityOperationsPage() {
             size="sm"
             onClick={() => handleSimulateBurst("VULNERABILITY", "VULNERABILITY_FOUND")}
             disabled={simulating}
-            className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 gap-1.5 text-xs"
+            className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 gap-1.5 text-xs shadow-2xs"
           >
-            <ShieldAlert className="h-3.5 w-3.5 text-rose-400" />
+            <ShieldAlert className="h-3.5 w-3.5 text-rose-600" />
             Simulate Critical CVE
           </Button>
 
@@ -189,9 +189,9 @@ export default function SecurityOperationsPage() {
             size="sm"
             onClick={() => handleSimulateBurst("IAM", "MFA_DISABLED")}
             disabled={simulating}
-            className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 gap-1.5 text-xs"
+            className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 gap-1.5 text-xs shadow-2xs"
           >
-            <Unlock className="h-3.5 w-3.5 text-amber-400" />
+            <Unlock className="h-3.5 w-3.5 text-amber-600" />
             Simulate MFA Deactivation
           </Button>
 
@@ -199,7 +199,7 @@ export default function SecurityOperationsPage() {
             size="sm"
             onClick={() => handleSimulateBurst("EDR", "MALWARE_DETECTED")}
             disabled={simulating}
-            className="bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white gap-1.5 text-xs shadow-lg shadow-rose-950/40"
+            className="bg-rose-600 hover:bg-rose-700 text-white gap-1.5 text-xs font-semibold shadow-xs"
           >
             <Flame className="h-3.5 w-3.5" />
             Inject Incident Chain
@@ -208,12 +208,12 @@ export default function SecurityOperationsPage() {
       </div>
 
       {burstSuccessMessage && (
-        <div className="p-3 rounded-lg border border-emerald-500/40 bg-emerald-950/30 text-emerald-200 text-xs flex items-center justify-between animate-in fade-in">
-          <span className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+        <div className="p-3 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-800 text-xs flex items-center justify-between animate-in fade-in">
+          <span className="flex items-center gap-2 font-medium">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
             {burstSuccessMessage}
           </span>
-          <button onClick={() => setBurstSuccessMessage(null)} className="text-slate-400 hover:text-white">✕</button>
+          <button onClick={() => setBurstSuccessMessage(null)} className="text-slate-500 hover:text-slate-800">✕</button>
         </div>
       )}
 
@@ -222,70 +222,70 @@ export default function SecurityOperationsPage() {
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Metric 1: Enterprise Risk Score & Drift */}
-        <Card className="border-rose-900/40 bg-gradient-to-br from-rose-950/30 via-slate-900/80 to-slate-950 p-5 relative overflow-hidden shadow-lg">
-          <div className="absolute right-3 top-3 opacity-10">
-            <ShieldAlert className="h-20 w-20 text-rose-400" />
+        <Card className="border-rose-200 bg-white p-5 relative overflow-hidden shadow-xs">
+          <div className="absolute right-3 top-3 opacity-5">
+            <ShieldAlert className="h-20 w-20 text-rose-600" />
           </div>
-          <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Enterprise Risk Drift</p>
+          <p className="text-xs uppercase tracking-wider text-slate-500 font-semibold">Enterprise Risk Drift</p>
           <div className="mt-2 flex items-baseline gap-3">
             <span className="text-2xl font-bold font-mono text-slate-400 line-through">72</span>
-            <span className="text-3xl font-extrabold font-mono text-rose-400">{currentRisk > 75 ? currentRisk.toFixed(0) : "84"}</span>
-            <Badge className="bg-rose-950 text-rose-300 border-rose-500/40 text-xs gap-1 font-mono">
+            <span className="text-3xl font-extrabold font-mono text-rose-600">{currentRisk > 75 ? currentRisk.toFixed(0) : "84"}</span>
+            <Badge className="bg-rose-50 text-rose-700 border-rose-200 text-xs gap-1 font-mono">
               <ArrowUpRight className="h-3 w-3" />
               +12
             </Badge>
           </div>
-          <div className="mt-2 pt-2 border-t border-rose-900/30 text-[11px] text-slate-300">
-            <span className="text-rose-400 font-semibold">Main Driver:</span> Critical vulnerability on Payment Service (CVE-2024-3400)
+          <div className="mt-2 pt-2 border-t border-slate-100 text-[11px] text-slate-600">
+            <span className="text-rose-700 font-semibold">Main Driver:</span> Critical vulnerability on Payment Service (CVE-2024-3400)
           </div>
         </Card>
 
         {/* Metric 2: Financial Exposure */}
-        <Card className="border-amber-900/40 bg-gradient-to-br from-amber-950/30 via-slate-900/80 to-slate-950 p-5 relative overflow-hidden shadow-lg">
-          <div className="absolute right-3 top-3 opacity-10">
-            <TrendingUp className="h-20 w-20 text-amber-400" />
+        <Card className="border-amber-200 bg-white p-5 relative overflow-hidden shadow-xs">
+          <div className="absolute right-3 top-3 opacity-5">
+            <TrendingUp className="h-20 w-20 text-amber-600" />
           </div>
-          <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Financial Exposure</p>
+          <p className="text-xs uppercase tracking-wider text-slate-500 font-semibold">Financial Exposure</p>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-xl font-bold font-mono text-slate-400 line-through">₹4.82 Cr</span>
-            <span className="text-2xl font-extrabold font-mono text-amber-300">₹5.37 Cr</span>
-            <Badge className="bg-amber-950 text-amber-300 border-amber-500/40 text-xs font-mono">
+            <span className="text-2xl font-extrabold font-mono text-amber-800">₹5.37 Cr</span>
+            <Badge className="bg-amber-50 text-amber-800 border-amber-200 text-xs font-mono">
               ▲ ₹55L
             </Badge>
           </div>
-          <p className="mt-2 text-[11px] text-slate-400">
+          <p className="mt-2 text-[11px] text-slate-500">
             Expected Annual Loss (EAL) dynamic recalibration
           </p>
         </Card>
 
         {/* Metric 3: Critical Alerts */}
-        <Card className="border-cyan-900/40 bg-gradient-to-br from-cyan-950/30 via-slate-900/80 to-slate-950 p-5 relative overflow-hidden shadow-lg">
-          <div className="absolute right-3 top-3 opacity-10">
-            <AlertOctagon className="h-20 w-20 text-cyan-400" />
+        <Card className="border-blue-200 bg-white p-5 relative overflow-hidden shadow-xs">
+          <div className="absolute right-3 top-3 opacity-5">
+            <AlertOctagon className="h-20 w-20 text-blue-600" />
           </div>
-          <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Active Critical Alerts</p>
+          <p className="text-xs uppercase tracking-wider text-slate-500 font-semibold">Active Critical Alerts</p>
           <div className="mt-2 flex items-baseline gap-3">
-            <span className="text-3xl font-extrabold font-mono text-cyan-300">{critAlerts}</span>
-            <Badge variant="outline" className="border-cyan-500/40 text-cyan-300 text-xs">
+            <span className="text-3xl font-extrabold font-mono text-blue-700">{critAlerts}</span>
+            <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50 text-xs">
               Immediate Action Req.
             </Badge>
           </div>
-          <p className="mt-2 text-[11px] text-slate-400">
+          <p className="mt-2 text-[11px] text-slate-500">
             Correlated attack chains awaiting response
           </p>
         </Card>
 
         {/* Metric 4: Risk Drift Status */}
-        <Card className="border-purple-900/40 bg-gradient-to-br from-purple-950/30 via-slate-900/80 to-slate-950 p-5 relative overflow-hidden shadow-lg">
-          <div className="absolute right-3 top-3 opacity-10">
-            <Zap className="h-20 w-20 text-purple-400" />
+        <Card className="border-purple-200 bg-white p-5 relative overflow-hidden shadow-xs">
+          <div className="absolute right-3 top-3 opacity-5">
+            <Zap className="h-20 w-20 text-purple-600" />
           </div>
-          <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Risk Drift Trajectory</p>
+          <p className="text-xs uppercase tracking-wider text-slate-500 font-semibold">Risk Drift Trajectory</p>
           <div className="mt-2 flex items-center gap-2">
             <span className="flex h-3 w-3 rounded-full bg-rose-500 animate-ping" />
-            <span className="text-2xl font-extrabold text-white">{driftLevel} DRIFT</span>
+            <span className="text-2xl font-extrabold text-slate-900">{driftLevel} DRIFT</span>
           </div>
-          <p className="mt-2 text-[11px] text-slate-400">
+          <p className="mt-2 text-[11px] text-slate-500">
             Accumulated vulnerabilities & auth degradation
           </p>
         </Card>
@@ -296,15 +296,15 @@ export default function SecurityOperationsPage() {
       {/* ========================================================================= */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-            <Server className="h-4 w-4 text-cyan-400" />
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+            <Server className="h-4 w-4 text-blue-600" />
             Enterprise Ingestion Connectors ({Object.keys(connectors).length})
           </h2>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => refetchHealth()}
-            className="text-xs text-slate-400 hover:text-white h-7 gap-1"
+            className="text-xs text-slate-500 hover:text-slate-800 h-7 gap-1"
           >
             <RefreshCw className="h-3 w-3" />
             Refresh Health
@@ -318,28 +318,28 @@ export default function SecurityOperationsPage() {
             return (
               <Card
                 key={key}
-                className="border-slate-800/80 bg-slate-900/60 p-3.5 space-y-2 hover:border-slate-700 transition-colors"
+                className="border-slate-200 bg-white p-3.5 space-y-2 hover:border-slate-300 transition-colors shadow-2xs"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-slate-200 uppercase truncate">
+                  <span className="text-[11px] font-bold text-slate-800 uppercase truncate">
                     {key.replace("_", " ")}
                   </span>
                   <Badge
                     className={`text-[9px] px-1.5 py-0 font-mono ${
                       isConnected
-                        ? "bg-emerald-950 text-emerald-300 border-emerald-500/40"
+                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                         : isDemo
-                        ? "bg-cyan-950 text-cyan-300 border-cyan-500/40"
-                        : "bg-slate-800 text-slate-400 border-slate-700"
+                        ? "bg-blue-50 text-blue-700 border-blue-200"
+                        : "bg-slate-100 text-slate-600 border-slate-200"
                     }`}
                   >
                     {item.status}
                   </Badge>
                 </div>
-                <p className="text-[11px] text-slate-400 line-clamp-1">{item.name || key}</p>
-                <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono pt-1 border-t border-slate-800/60">
+                <p className="text-[11px] text-slate-500 line-clamp-1">{item.name || key}</p>
+                <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono pt-1 border-t border-slate-100">
                   <span>{item.latency_ms || 12}ms</span>
-                  <span className="text-emerald-400/80">Active</span>
+                  <span className="text-emerald-700 font-semibold">Active</span>
                 </div>
               </Card>
             );
@@ -350,23 +350,23 @@ export default function SecurityOperationsPage() {
       {/* ========================================================================= */}
       {/* SECTION 3: RISK DRIFT & EXPOSURE CHART (RECHARTS) */}
       {/* ========================================================================= */}
-      <Card className="border-slate-800 bg-slate-900/60 backdrop-blur">
+      <Card className="border-slate-200 bg-white shadow-sm">
         <CardHeader className="p-5 pb-2">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <CardTitle className="text-sm font-bold text-slate-100 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-cyan-400" />
+              <CardTitle className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-blue-600" />
                 Continuous Risk & Financial Drift Timeline
               </CardTitle>
-              <CardDescription className="text-xs text-slate-400 mt-0.5">
+              <CardDescription className="text-xs text-slate-500 mt-0.5">
                 Real-time tracking of quantified risk score and financial exposure shifts over time.
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="border-rose-500/40 text-rose-300 text-xs">
+              <Badge variant="outline" className="border-rose-200 bg-rose-50 text-rose-700 text-xs">
                 Risk Score (0-100)
               </Badge>
-              <Badge variant="outline" className="border-amber-500/40 text-amber-300 text-xs">
+              <Badge variant="outline" className="border-amber-200 bg-amber-50 text-amber-700 text-xs">
                 Financial Exposure (₹ Lakhs)
               </Badge>
             </div>
@@ -378,24 +378,27 @@ export default function SecurityOperationsPage() {
               <AreaChart data={chartPoints} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="riskGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.4} />
+                    <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} />
                     <stop offset="95%" stopColor="#f43f5e" stopOpacity={0.0} />
                   </linearGradient>
                   <linearGradient id="finGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3} />
+                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.25} />
                     <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis dataKey="time" stroke="#64748b" fontSize={11} />
                 <YAxis stroke="#64748b" fontSize={11} domain={[40, 100]} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#0f172a",
-                    borderColor: "#334155",
+                    backgroundColor: "#ffffff",
+                    borderColor: "#e2e8f0",
+                    color: "#0f172a",
                     fontSize: "12px",
                     borderRadius: "8px",
+                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                   }}
+                  itemStyle={{ color: "#0f172a" }}
                   formatter={(val: any, name: any) => [
                     name === "risk" ? `${val} / 100` : `₹${val} Lakhs`,
                     name === "risk" ? "Risk Score" : "Financial Exposure",
@@ -426,14 +429,14 @@ export default function SecurityOperationsPage() {
       {/* ========================================================================= */}
       {/* SECTION 28: REAL-TIME EVENT TIMELINE & PROPAGATION EXPERIENCE */}
       {/* ========================================================================= */}
-      <Card className="border-cyan-500/30 bg-gradient-to-br from-[#0c1a2e] to-[#0a101d] shadow-lg">
+      <Card className="border-blue-200 bg-gradient-to-br from-blue-50/60 to-slate-50 shadow-sm">
         <CardHeader className="p-4 pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-xs uppercase tracking-wider text-cyan-300 font-bold flex items-center gap-2">
-              <Clock className="h-4 w-4 text-cyan-400" />
+            <CardTitle className="text-xs uppercase tracking-wider text-blue-900 font-bold flex items-center gap-2">
+              <Clock className="h-4 w-4 text-blue-600" />
               Real-Time Attack-to-Financial Propagation Timeline
             </CardTitle>
-            <Badge variant="outline" className="border-cyan-500/40 text-cyan-300 text-[10px]">
+            <Badge variant="outline" className="border-blue-300 bg-blue-100/70 text-blue-800 text-[10px]">
               Continuous Telemetry Pipeline
             </Badge>
           </div>
@@ -441,19 +444,19 @@ export default function SecurityOperationsPage() {
         <CardContent className="p-4 pt-1">
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 pt-2">
             {[
-              { time: "09:42", label: "Critical Vulnerability Detected", change: "CVE-2024-3400 (CVSS 9.8)", status: "text-rose-400 border-rose-500/40" },
-              { time: "09:47", label: "Threat Intelligence Match", change: "Active C2 exploit campaign", status: "text-amber-400 border-amber-500/40" },
-              { time: "09:49", label: "Attack Path Risk Increased", change: "Crown-jewel database path +18%", status: "text-rose-400 border-rose-500/40" },
-              { time: "09:51", label: "Financial Exposure Recalculated", change: "EAL shifted to ₹5.37 Cr (+₹55L)", status: "text-purple-400 border-purple-500/40" },
-              { time: "09:53", label: "Investment Recommended", change: "OR-Tools selects PAM & micro-seg", status: "text-emerald-400 border-emerald-500/40" },
+              { time: "09:42", label: "Critical Vulnerability Detected", change: "CVE-2024-3400 (CVSS 9.8)", status: "text-rose-700 border-rose-200 bg-white shadow-xs" },
+              { time: "09:47", label: "Threat Intelligence Match", change: "Active C2 exploit campaign", status: "text-amber-700 border-amber-200 bg-white shadow-xs" },
+              { time: "09:49", label: "Attack Path Risk Increased", change: "Crown-jewel database path +18%", status: "text-rose-700 border-rose-200 bg-white shadow-xs" },
+              { time: "09:51", label: "Financial Exposure Recalculated", change: "EAL shifted to ₹5.37 Cr (+₹55L)", status: "text-purple-700 border-purple-200 bg-white shadow-xs" },
+              { time: "09:53", label: "Investment Recommended", change: "OR-Tools selects PAM & micro-seg", status: "text-emerald-700 border-emerald-200 bg-white shadow-xs" },
             ].map((step, i) => (
-              <div key={i} className={`p-2.5 rounded-lg border bg-[#070b14]/70 ${step.status} text-xs space-y-1`}>
-                <div className="flex items-center justify-between font-mono text-[10px] text-slate-400">
-                  <span className="font-bold text-cyan-300">{step.time}</span>
+              <div key={i} className={`p-2.5 rounded-lg border ${step.status} text-xs space-y-1`}>
+                <div className="flex items-center justify-between font-mono text-[10px] text-slate-500">
+                  <span className="font-bold text-blue-700">{step.time}</span>
                   <span>Step {i + 1}</span>
                 </div>
-                <p className="font-semibold text-slate-200 text-[11px] leading-snug">{step.label}</p>
-                <p className="text-[10px] text-slate-400 leading-tight">{step.change}</p>
+                <p className="font-semibold text-slate-900 text-[11px] leading-snug">{step.label}</p>
+                <p className="text-[10px] text-slate-600 leading-tight">{step.change}</p>
               </div>
             ))}
           </div>
@@ -466,11 +469,11 @@ export default function SecurityOperationsPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Left Column: Real-Time Event Stream (7 cols) */}
         <div className="space-y-3 lg:col-span-7">
-          <Card className="border-slate-800 bg-slate-900/60 backdrop-blur">
+          <Card className="border-slate-200 bg-white shadow-sm">
             <CardHeader className="p-4 pb-2">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-200">
-                  <Activity className="h-4 w-4 text-cyan-400" />
+                <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-900">
+                  <Activity className="h-4 w-4 text-blue-600" />
                   Real-Time Security Event Stream
                 </CardTitle>
                 {/* Severity Filters */}
@@ -481,8 +484,8 @@ export default function SecurityOperationsPage() {
                       onClick={() => setSeverityFilter(sev)}
                       className={`text-[10px] px-2 py-0.5 rounded border transition-colors ${
                         severityFilter === sev
-                          ? "border-cyan-500 bg-cyan-950/60 text-cyan-300 font-semibold"
-                          : "border-slate-800 bg-slate-950/50 text-slate-400 hover:border-slate-700"
+                          ? "border-blue-600 bg-blue-50 text-blue-700 font-semibold"
+                          : "border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:bg-slate-100"
                       }`}
                     >
                       {sev}
@@ -504,8 +507,8 @@ export default function SecurityOperationsPage() {
                           onClick={() => setSelectedEvent(evt)}
                           className={`p-3 rounded-lg border text-xs cursor-pointer transition-all ${
                             selectedEvent?.id === evt.id
-                              ? "border-cyan-500 bg-cyan-950/30 text-white shadow-md shadow-cyan-950"
-                              : "border-slate-800/80 bg-slate-950/40 text-slate-300 hover:border-slate-700 hover:bg-slate-800/40"
+                              ? "border-blue-500 bg-blue-50/70 text-slate-900 shadow-sm"
+                              : "border-slate-200 bg-slate-50/60 text-slate-800 hover:border-slate-300 hover:bg-slate-100/80"
                           }`}
                         >
                           <div className="flex items-center justify-between gap-2 mb-1.5">
@@ -513,35 +516,35 @@ export default function SecurityOperationsPage() {
                               <Badge
                                 className={`text-[10px] font-bold px-1.5 py-0 ${
                                   isCrit
-                                    ? "bg-rose-950 text-rose-300 border-rose-500/50"
+                                    ? "bg-rose-50 text-rose-700 border-rose-200"
                                     : isHigh
-                                    ? "bg-amber-950 text-amber-300 border-amber-500/50"
-                                    : "bg-blue-950 text-blue-300 border-blue-500/40"
+                                    ? "bg-amber-50 text-amber-700 border-amber-200"
+                                    : "bg-blue-50 text-blue-700 border-blue-200"
                                 }`}
                               >
                                 {evt.severity}
                               </Badge>
-                              <span className="font-semibold text-slate-200 line-clamp-1">
+                              <span className="font-semibold text-slate-900 line-clamp-1">
                                 {evt.description}
                               </span>
                             </div>
-                            <span className="font-mono text-[10px] text-slate-500 shrink-0">
+                            <span className="font-mono text-[10px] text-slate-400 shrink-0">
                               {new Date(evt.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
                             </span>
                           </div>
 
-                          <div className="flex flex-wrap items-center justify-between text-[11px] text-slate-400 gap-2">
-                            <span className="font-mono text-cyan-400/80">
+                          <div className="flex flex-wrap items-center justify-between text-[11px] text-slate-500 gap-2">
+                            <span className="font-mono text-blue-600 font-medium">
                               {evt.source} · {evt.hostname || evt.ip_address || "Identity Provider"}
                             </span>
                             <div className="flex items-center gap-2">
                               {isCrit && (
-                                <Badge variant="outline" className="border-rose-500/40 text-rose-300 text-[10px]">
+                                <Badge variant="outline" className="border-rose-200 bg-rose-50 text-rose-700 text-[10px]">
                                   +₹18L Exposure
                                 </Badge>
                               )}
                               {isHigh && (
-                                <Badge variant="outline" className="border-amber-500/40 text-amber-300 text-[10px]">
+                                <Badge variant="outline" className="border-amber-200 bg-amber-50 text-amber-700 text-[10px]">
                                   Risk +11
                                 </Badge>
                               )}
@@ -563,14 +566,14 @@ export default function SecurityOperationsPage() {
 
         {/* Right Column: Active Prioritized Alerts (5 cols) */}
         <div className="space-y-3 lg:col-span-5">
-          <Card className="border-slate-800 bg-slate-900/60 backdrop-blur">
+          <Card className="border-slate-200 bg-white shadow-sm">
             <CardHeader className="p-4 pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-200">
-                  <AlertTriangle className="h-4 w-4 text-amber-400" />
+                <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-900">
+                  <AlertTriangle className="h-4 w-4 text-amber-500" />
                   Prioritized Risk Alerts ({alertsData?.data?.length || 0})
                 </CardTitle>
-                <Badge variant="outline" className="text-[10px] border-amber-500/40 text-amber-300">
+                <Badge variant="outline" className="text-[10px] border-amber-200 bg-amber-50 text-amber-800">
                   Continuous Triage
                 </Badge>
               </div>
@@ -582,7 +585,7 @@ export default function SecurityOperationsPage() {
                     {alertsData.data.map((alert: RiskAlertItem) => (
                       <div
                         key={alert.id}
-                        className="p-3 rounded-lg border border-slate-800 bg-slate-950/60 text-xs space-y-2 hover:border-slate-700 transition-colors"
+                        className="p-3 rounded-lg border border-slate-200 bg-slate-50/70 text-xs space-y-2 hover:border-slate-300 transition-colors"
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="space-y-1">
@@ -590,23 +593,23 @@ export default function SecurityOperationsPage() {
                               <Badge
                                 className={`text-[9px] px-1.5 py-0 ${
                                   alert.severity === "CRITICAL"
-                                    ? "bg-rose-950 text-rose-300 border-rose-500/50"
-                                    : "bg-amber-950 text-amber-300 border-amber-500/50"
+                                    ? "bg-rose-50 text-rose-700 border-rose-200"
+                                    : "bg-amber-50 text-amber-700 border-amber-200"
                                 }`}
                               >
                                 {alert.severity}
                               </Badge>
-                              <span className="font-bold text-slate-200 line-clamp-1">{alert.title}</span>
+                              <span className="font-bold text-slate-900 line-clamp-1">{alert.title}</span>
                             </div>
-                            <p className="text-[11px] text-slate-400 leading-relaxed">
+                            <p className="text-[11px] text-slate-600 leading-relaxed">
                               {alert.description}
                             </p>
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between pt-1 border-t border-slate-900 text-[10px]">
+                        <div className="flex items-center justify-between pt-1 border-t border-slate-200 text-[10px]">
                           <span className="font-mono text-slate-500">
-                            Status: <span className="text-cyan-300">{alert.status}</span>
+                            Status: <span className="text-blue-700 font-semibold">{alert.status}</span>
                           </span>
                           <div className="flex items-center gap-1.5">
                             {alert.status === "OPEN" && (
@@ -614,7 +617,7 @@ export default function SecurityOperationsPage() {
                                 size="sm"
                                 variant="outline"
                                 onClick={() => handleAlertAction(alert.id, "ACKNOWLEDGED")}
-                                className="h-6 text-[10px] px-2 border-slate-700 text-slate-300 hover:bg-slate-800"
+                                className="h-6 text-[10px] px-2 border-slate-300 text-slate-700 hover:bg-slate-100"
                               >
                                 Acknowledge
                               </Button>
@@ -623,7 +626,7 @@ export default function SecurityOperationsPage() {
                               <Button
                                 size="sm"
                                 onClick={() => handleAlertAction(alert.id, "RESOLVED")}
-                                className="h-6 text-[10px] px-2 bg-emerald-600 hover:bg-emerald-500 text-white"
+                                className="h-6 text-[10px] px-2 bg-emerald-600 hover:bg-emerald-700 text-white"
                               >
                                 Resolve
                               </Button>
@@ -649,68 +652,68 @@ export default function SecurityOperationsPage() {
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {/* IAM Posture Card */}
-        <Card className="border-slate-800 bg-slate-900/50">
+        <Card className="border-slate-200 bg-white shadow-sm">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-xs uppercase tracking-wider text-cyan-400 font-semibold flex items-center gap-2">
+            <CardTitle className="text-xs uppercase tracking-wider text-blue-700 font-semibold flex items-center gap-2">
               <Lock className="h-4 w-4" />
               Identity & Access (IAM) Continuous Signals
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-2 space-y-3 text-xs">
             <div className="grid grid-cols-3 gap-2">
-              <div className="p-2.5 rounded bg-slate-950/60 border border-slate-800">
-                <p className="text-[10px] text-slate-500">MFA Disabled</p>
-                <p className="text-lg font-bold text-rose-400 font-mono mt-0.5">
+              <div className="p-2.5 rounded bg-slate-50 border border-slate-200">
+                <p className="text-[10px] text-slate-500 font-medium">MFA Disabled</p>
+                <p className="text-lg font-bold text-rose-600 font-mono mt-0.5">
                   {iamSignals?.mfa_disabled_accounts ?? 1}
                 </p>
               </div>
-              <div className="p-2.5 rounded bg-slate-950/60 border border-slate-800">
-                <p className="text-[10px] text-slate-500">Privileged Accts</p>
-                <p className="text-lg font-bold text-cyan-300 font-mono mt-0.5">
+              <div className="p-2.5 rounded bg-slate-50 border border-slate-200">
+                <p className="text-[10px] text-slate-500 font-medium">Privileged Accts</p>
+                <p className="text-lg font-bold text-blue-600 font-mono mt-0.5">
                   {iamSignals?.privileged_identities_count ?? 4}
                 </p>
               </div>
-              <div className="p-2.5 rounded bg-slate-950/60 border border-slate-800">
-                <p className="text-[10px] text-slate-500">Auth Bursts</p>
-                <p className="text-lg font-bold text-amber-300 font-mono mt-0.5">Detected</p>
+              <div className="p-2.5 rounded bg-slate-50 border border-slate-200">
+                <p className="text-[10px] text-slate-500 font-medium">Auth Bursts</p>
+                <p className="text-lg font-bold text-amber-600 font-mono mt-0.5">Detected</p>
               </div>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-600">
               Correlated with single-sign-on event logs to detect credential theft and lateral pivoting before data compromise.
             </p>
           </CardContent>
         </Card>
 
         {/* CSPM Posture Card */}
-        <Card className="border-slate-800 bg-slate-900/50">
+        <Card className="border-slate-200 bg-white shadow-sm">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-xs uppercase tracking-wider text-emerald-400 font-semibold flex items-center gap-2">
+            <CardTitle className="text-xs uppercase tracking-wider text-emerald-700 font-semibold flex items-center gap-2">
               <Globe className="h-4 w-4" />
               Cloud Security Posture (CSPM) Continuous Signals
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-2 space-y-3 text-xs">
             <div className="grid grid-cols-3 gap-2">
-              <div className="p-2.5 rounded bg-slate-950/60 border border-slate-800">
-                <p className="text-[10px] text-slate-500">Public Buckets</p>
-                <p className="text-lg font-bold text-rose-400 font-mono mt-0.5">
+              <div className="p-2.5 rounded bg-slate-50 border border-slate-200">
+                <p className="text-[10px] text-slate-500 font-medium">Public Buckets</p>
+                <p className="text-lg font-bold text-rose-600 font-mono mt-0.5">
                   {cspmSignals?.public_storage_buckets ?? 1}
                 </p>
               </div>
-              <div className="p-2.5 rounded bg-slate-950/60 border border-slate-800">
-                <p className="text-[10px] text-slate-500">Open Ports</p>
-                <p className="text-lg font-bold text-amber-300 font-mono mt-0.5">
+              <div className="p-2.5 rounded bg-slate-50 border border-slate-200">
+                <p className="text-[10px] text-slate-500 font-medium">Open Ports</p>
+                <p className="text-lg font-bold text-amber-600 font-mono mt-0.5">
                   {cspmSignals?.open_sensitive_ports ?? 2}
                 </p>
               </div>
-              <div className="p-2.5 rounded bg-slate-950/60 border border-slate-800">
-                <p className="text-[10px] text-slate-500">Unencrypted DB</p>
-                <p className="text-lg font-bold text-purple-300 font-mono mt-0.5">
+              <div className="p-2.5 rounded bg-slate-50 border border-slate-200">
+                <p className="text-[10px] text-slate-500 font-medium">Unencrypted DB</p>
+                <p className="text-lg font-bold text-purple-600 font-mono mt-0.5">
                   {cspmSignals?.unencrypted_databases ?? 1}
                 </p>
               </div>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-600">
               Continuously updates perimeter exposure multipliers across Neo4j graph nodes and deterministic risk scores.
             </p>
           </CardContent>

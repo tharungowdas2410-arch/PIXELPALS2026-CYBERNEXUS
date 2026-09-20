@@ -36,7 +36,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     : [];
 
   return (
-    <div className="flex min-h-screen bg-[#070b14] text-slate-100">
+    <div className="flex min-h-screen bg-[#F8FAFC] text-[#0F172A]">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <DemoControlBar />

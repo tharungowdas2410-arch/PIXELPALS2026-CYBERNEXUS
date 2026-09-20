@@ -93,8 +93,11 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 }
 
 export async function apiData<T>(path: string, options?: RequestOptions): Promise<T> {
-  const payload = await apiRequest<DataEnvelope<T>>(path, options);
-  return payload.data;
+  const payload = await apiRequest<any>(path, options);
+  if (payload !== null && typeof payload === "object" && "data" in payload && payload.data !== undefined) {
+    return payload.data as T;
+  }
+  return (payload ?? null) as T;
 }
 
 export async function apiPaginated<T>(path: string, options?: RequestOptions): Promise<Paginated<T>> {

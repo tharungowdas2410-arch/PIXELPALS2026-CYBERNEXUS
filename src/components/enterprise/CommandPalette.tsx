@@ -159,25 +159,25 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl p-0 overflow-hidden border border-white/15 bg-[#0a101d] shadow-2xl">
-        <div className="flex items-center border-b border-white/10 px-4 py-3">
-          <Search className="h-4 w-4 text-cyan-400 mr-3 shrink-0" />
+      <DialogContent className="max-w-xl p-0 overflow-hidden border border-[#E2E8F0] bg-white shadow-2xl">
+        <div className="flex items-center border-b border-[#E2E8F0] px-4 py-3 bg-[#F8FAFC]">
+          <Search className="h-4 w-4 text-blue-600 mr-3 shrink-0" />
           <input
             type="text"
-            className="flex-1 bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-slate-900 placeholder-slate-400 focus:outline-none"
             placeholder="Type a command, page, or asset name (Ctrl+K)..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
           />
-          <kbd className="hidden sm:inline-flex items-center gap-1 rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] font-mono text-slate-400">
+          <kbd className="hidden sm:inline-flex items-center gap-1 rounded border border-[#CBD5E1] bg-white px-1.5 py-0.5 text-[10px] font-mono text-slate-500">
             ESC
           </kbd>
         </div>
 
-        <div className="max-h-80 overflow-y-auto p-2 divide-y divide-white/5">
+        <div className="max-h-80 overflow-y-auto p-2 divide-y divide-[#F1F5F9]">
           {filtered.length === 0 ? (
-            <div className="p-6 text-center text-xs text-slate-500">
+            <div className="p-6 text-center text-xs text-slate-400">
               No matching commands or objects found.
             </div>
           ) : (
@@ -188,23 +188,23 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                   key={cmd.id}
                   type="button"
                   onClick={cmd.action}
-                  className="flex w-full items-center justify-between px-3 py-2.5 rounded-md hover:bg-white/5 transition-colors text-left group"
+                  className="flex w-full items-center justify-between px-3 py-2.5 rounded-md hover:bg-slate-100 transition-colors text-left group"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="p-1.5 rounded-md bg-white/5 group-hover:bg-cyan-500/20 text-slate-400 group-hover:text-cyan-300 transition-colors">
+                    <div className="p-1.5 rounded-md bg-slate-100 group-hover:bg-blue-50 text-slate-500 group-hover:text-blue-600 transition-colors">
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="truncate">
-                      <p className="text-sm font-medium text-slate-200 group-hover:text-white truncate">
+                      <p className="text-sm font-medium text-slate-800 group-hover:text-slate-900 truncate">
                         {cmd.title}
                       </p>
-                      <p className="text-[10px] uppercase tracking-wider text-slate-500">
+                      <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
                         {cmd.category}
                       </p>
                     </div>
                   </div>
                   {cmd.shortcut && (
-                    <kbd className="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] font-mono text-cyan-400">
+                    <kbd className="rounded border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[10px] font-mono font-medium text-blue-700">
                       {cmd.shortcut}
                     </kbd>
                   )}
@@ -214,9 +214,9 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           )}
         </div>
 
-        <div className="flex items-center justify-between border-t border-white/10 px-4 py-2 bg-[#080d17] text-[11px] text-slate-500">
+        <div className="flex items-center justify-between border-t border-[#E2E8F0] px-4 py-2 bg-[#F8FAFC] text-[11px] text-slate-500">
           <span>Navigate with arrow keys or type to filter</span>
-          <span className="font-mono text-cyan-400">SIH 26105 Command Core</span>
+          <span className="font-mono text-blue-600 font-semibold">SIH 26105 Command Core</span>
         </div>
       </DialogContent>
     </Dialog>

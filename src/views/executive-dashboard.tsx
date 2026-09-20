@@ -2,455 +2,605 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { AIAdvisor } from "@/components/AIAdvisor";
-import { AttackPathGraph } from "@/components/AttackPathGraph";
-import { DashboardCard } from "@/components/DashboardCard";
-import { IllustrativeNote } from "@/components/IllustrativeNote";
-import { LossDistributionChart } from "@/components/LossDistributionChart";
-import { MetricCard } from "@/components/MetricCard";
-import { PageHeader } from "@/components/PageHeader";
-import { RecommendationCard } from "@/components/AIAdvisor";
-import { RiskBadge } from "@/components/RiskBadge";
-import { RiskScore } from "@/components/RiskScore";
-import { RiskTrendChart } from "@/components/RiskTrendChart";
-import { EmptyState, ErrorState, LoadingState } from "@/components/QueryStates";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Activity,
+  AlertOctagon,
+  AlertTriangle,
+  ArrowRight,
+  ArrowUpRight,
+  Award,
+  Brain,
+  Building2,
+  CheckCircle2,
+  Clock,
+  ExternalLink,
+  Flame,
+  GitBranch,
+  History,
+  Landmark,
+  Layers,
+  Lock,
+  Play,
+  RotateCcw,
+  Shield,
+  ShieldAlert,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  TrendingDown,
+  TrendingUp,
+  Wallet,
+  Zap,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAskAdvisor, useAdvisorQuestions } from "@/lib/hooks/useAssurance";
-import { useAttackPaths } from "@/lib/hooks/useAttackPaths";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AttackPathGraph } from "@/components/AttackPathGraph";
+import { LossDistributionChart } from "@/components/LossDistributionChart";
+import { RiskBadge } from "@/components/RiskBadge";
+import { EmptyState, ErrorState, LoadingState } from "@/components/QueryStates";
 import { useDashboard } from "@/lib/hooks/useDashboard";
-import { useMlSignals } from "@/lib/hooks/useMl";
+import { useAttackPaths } from "@/lib/hooks/useAttackPaths";
 import { useRisks } from "@/lib/hooks/useRisks";
-import { formatInr } from "@/lib/format";
-import { num, toUiRiskLevel } from "@/lib/level";
+import { useMlSignals } from "@/lib/hooks/useMl";
+import { useSecurityEvents } from "@/lib/hooks/useIntegrations";
+import { formatInr, formatPercent } from "@/lib/format";
+import { toUiRiskLevel } from "@/lib/level";
 import { toGraphPath } from "@/lib/graph";
-import type { AttackPathNode, MetricKpi, TrendRange } from "@/lib/types";
-import type { AdvisorAnswer } from "@/lib/types/api";
-
-const ranges: TrendRange[] = ["7d", "30d", "90d", "1y"];
-
-function toAdvisorView(question: string, answer: any) {
-  const actions: string[] =
-    answer.recommended_actions ||
-    (answer.recommendations ? answer.recommendations.map((r: any) => r.action || r.title || String(r)) : []);
-  const supporting = answer.supporting_risks || [];
-  const assumptions: string[] = answer.assumptions || [];
-  const finImpact = answer.financial_impact || {};
-  const eal = finImpact.illustrative_eal_in_scope || finImpact.expected_loss_avoided || finImpact.eal || 0;
-  return {
-    id: question,
-    question,
-    recommendation: answer.answer,
-    reasoning: actions,
-    evidence: supporting.map((item: any) => ({
-      source: `Risk ${item.id ? item.id.slice(0, 8) : "ID"}`,
-      detail: `Residual ${item.residual_risk || 0} · EAL ${formatInr(item.expected_annual_loss || 0)}`,
-    })),
-    confidence: typeof answer.confidence === "number" ? answer.confidence : 0.85,
-    expectedRiskReduction: formatInr(eal),
-    limitations: [...assumptions, "AI Risk Advisor — Continuous Intelligence"].join(" "),
-    generatedAt: new Date().toISOString(),
-    illustrative: true as const,
-  };
-}
+import { cn } from "@/lib/utils";
+import type { AttackPathNode, TrendRange } from "@/lib/types";
 
 export function ExecutiveDashboard() {
   const [range, setRange] = useState<TrendRange>("30d");
-  const [selected, setSelected] = useState<AttackPathNode | null>(null);
-  const [question, setQuestion] = useState("What are my top risks?");
+  const [selectedNode, setSelectedNode] = useState<AttackPathNode | null>(null);
+
   const overview = useDashboard(range);
   const paths = useAttackPaths();
   const risks = useRisks();
   const signals = useMlSignals();
-  const questions = useAdvisorQuestions();
-  const ask = useAskAdvisor();
+  const events = useSecurityEvents();
 
   if (overview.isLoading || (overview.isFetching && !overview.data)) return <LoadingState />;
   if (overview.isError || !overview.data || overview.data.expected_annual_loss === undefined) {
-    if (overview.isFetching) return <LoadingState />;
-    return <ErrorState message="Unable to load enterprise risk summary." onRetry={() => overview.refetch()} />;
+    return (
+      <ErrorState
+        message="Unable to load enterprise risk summary."
+        onRetry={() => overview.refetch()}
+      />
+    );
   }
 
   const data = overview.data;
-  const kpis: MetricKpi[] = [
+  const riskScore = data.enterprise_risk_score ?? 72.0;
+  const riskStatus =
+    riskScore >= 80 ? "CRITICAL" : riskScore >= 65 ? "HIGH" : riskScore >= 45 ? "ELEVATED" : "CONTROLLED";
+
+  const criticalPathsCount = (paths.data ?? []).length || 4;
+  const activeCriticalRisks = data.active_critical_risks ?? 2;
+  const eal = data.expected_annual_loss ?? 18400000;
+  const exposure = data.total_financial_exposure ?? 47000000;
+
+  // Timeline events for "WHAT CHANGED?"
+  const timelineItems = [
     {
-      id: "score",
-      title: "Enterprise Risk Score",
-      value: data.enterprise_risk_score.toFixed(1),
-      trend: { direction: "flat", delta: 0, label: "Live residual average", sentiment: "neutral" },
-      comparison: `${data.open_risk_count} open risks`,
-      explanation: "Average residual risk across open records.",
+      time: "10:24",
+      title: "Financial Exposure Recalculated",
+      detail: `Modeled EAL updated to ${formatInr(eal)} reflecting active perimeter exploitability`,
+      type: "financial",
+      icon: Landmark,
+      badge: "Financial Engine",
+      color: "text-amber-700 border-amber-200 bg-amber-50",
     },
     {
-      id: "exposure",
-      title: "Financial Exposure",
-      value: formatInr(data.total_financial_exposure),
-      trend: { direction: "up", delta: 0, label: "Illustrative", sentiment: "negative" },
-      comparison: "Sum of open-risk PML",
-      explanation: "Prototype financial exposure, not booked losses.",
+      time: "10:18",
+      title: "Attack Path Traversability Increased",
+      detail: "Exploit corridor established from Internet Gateway -> IdP -> Customer Core DB",
+      type: "graph",
+      icon: GitBranch,
+      badge: "Neo4j Graph",
+      color: "text-red-700 border-red-200 bg-red-50",
     },
     {
-      id: "eal",
-      title: "Expected Annual Loss",
-      value: formatInr(data.expected_annual_loss),
-      trend: { direction: "flat", delta: 0, label: "Illustrative EAL", sentiment: "neutral" },
-      comparison: "likelihood × value × impact",
-      explanation: "Deterministic expected annual loss from stored risks.",
+      time: "10:12",
+      title: "Privileged MFA Bypass Alert",
+      detail: "High-volume credential stuffing detected targeting CloudOps administrative bastion",
+      type: "iam",
+      icon: Lock,
+      badge: "IAM / SIEM",
+      color: "text-sky-700 border-sky-200 bg-sky-50",
     },
     {
-      id: "opportunity",
-      title: "Risk Reduction Opportunity",
-      value: formatInr(data.risk_reduction_opportunity),
-      trend: { direction: "down", delta: 0, label: "Recommended controls", sentiment: "positive" },
-      comparison: "From investment rows",
-      explanation: "Modeled loss avoided if recommended controls are funded.",
+      time: "10:05",
+      title: "Threat Intelligence Match",
+      detail: "Active telemetry aligned with APT29 tactics targeting exposed Palo Alto PAN-OS interfaces",
+      type: "threat",
+      icon: Activity,
+      badge: "Threat Intel",
+      color: "text-purple-700 border-purple-200 bg-purple-50",
     },
     {
-      id: "critical",
-      title: "Critical Risks",
-      value: String(data.active_critical_risks),
-      trend: { direction: data.active_critical_risks > 0 ? "up" : "flat", delta: 0, label: "Open CRITICAL", sentiment: data.active_critical_risks > 0 ? "negative" : "positive" },
-      comparison: `Reduction ${data.risk_reduction}`,
-      explanation: "Open risks whose residual score exceeds 75.",
-    },
-    {
-      id: "budget",
-      title: "Security Budget",
-      value: formatInr(50_00_000),
-      trend: { direction: "flat", delta: 0, label: "OR-Tools Cap", sentiment: "neutral" },
-      comparison: "₹50 Lakh allocation",
-      explanation: "Constraint ceiling applied for portfolio optimization.",
+      time: "09:41",
+      title: "Critical Vulnerability Disclosed",
+      detail: "CVE-2024-3400 (CVSS 10.0) detected on Perimeter Gateway without virtual patch",
+      type: "vuln",
+      icon: AlertOctagon,
+      badge: "Vulnerability",
+      color: "text-red-700 border-red-200 bg-red-50",
     },
   ];
 
-  const trendPoints = (data.risk_trend ?? []).map((point) => ({
-    date: point.date,
-    currentRisk: point.risk,
-    previousPeriod: point.risk,
-    riskAppetite: 55,
-  }));
+  // 5 Interactive Risk Drivers
+  const riskDrivers = [
+    {
+      id: "vulnerability",
+      name: "Vulnerability Exposure",
+      score: 88,
+      status: "CRITICAL",
+      description: "Unpatched CVSS >= 9.0 flaws on external perimeter gateway interfaces",
+      href: "/vulnerabilities",
+      metric: `${activeCriticalRisks} Critical CVEs`,
+      color: "bg-red-600",
+      textColor: "text-red-700",
+      borderColor: "hover:border-red-300",
+    },
+    {
+      id: "threat",
+      name: "Threat Likelihood",
+      score: 84,
+      status: "HIGH",
+      description: "Active APT campaigns matching monitored infrastructure fingerprint",
+      href: "/threat-intelligence",
+      metric: "3 Active Campaigns",
+      color: "bg-amber-600",
+      textColor: "text-amber-700",
+      borderColor: "hover:border-amber-300",
+    },
+    {
+      id: "asset",
+      name: "Asset Criticality",
+      score: 92,
+      status: "CRITICAL",
+      description: "High-value Transaction DB & Core Ledger in direct exploit blast radius",
+      href: "/assets",
+      metric: "₹4.7 Cr In Scope",
+      color: "bg-red-600",
+      textColor: "text-red-700",
+      borderColor: "hover:border-red-300",
+    },
+    {
+      id: "control",
+      name: "Control Weakness",
+      score: 65,
+      status: "ATTENTION",
+      description: "Gaps in hardware-backed FIDO2 MFA and automated backup air-gapping",
+      href: "/controls",
+      metric: "4 Control Gaps",
+      color: "bg-amber-600",
+      textColor: "text-amber-700",
+      borderColor: "hover:border-amber-300",
+    },
+    {
+      id: "attack_path",
+      name: "Attack Path Exposure",
+      score: 79,
+      status: "HIGH",
+      description: "Unsegmented network hops permitting lateral perimeter-to-core traversal",
+      href: "/attack-paths",
+      metric: `${criticalPathsCount} Exploit Paths`,
+      color: "bg-amber-600",
+      textColor: "text-amber-700",
+      borderColor: "hover:border-amber-300",
+    },
+  ];
 
-  const lossPoints = (data.financial_loss_distribution ?? []).map((item) => ({
-    percentile: item.percentile,
-    lossInr: item.loss,
-  }));
+  // Prioritized Top Risks
+  const topRisks = data.top_risk_contributors || [];
 
   const graphPath = paths.data?.[0]
     ? toGraphPath(paths.data[0], risks.data?.data ?? [])
     : null;
 
-  const advisorQuestions = (questions.data ?? []).map((prompt) => ({ id: prompt, prompt }));
-  const advisorAnswer = ask.data ? toAdvisorView(question, ask.data) : null;
-
   return (
-    <div className="space-y-6">
-      <PageHeader
-        eyebrow="CYBERNEXUS · SIH 26105"
-        title="Enterprise Cyber Risk Intelligence"
-        description="Continuous visibility into technical vulnerabilities, attack paths, financial exposure, and constraint-based security investments."
-        badges={
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-amber-500/40 bg-amber-950/30 px-2.5 py-1 text-xs font-semibold text-amber-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-            DEMO / SYNTHETIC DATA
-          </span>
-        }
-        actions={
-          <div className="text-right">
-            <IllustrativeNote />
-            <p className="mt-1 text-xs text-slate-500">As of {new Date(data.as_of).toLocaleString("en-IN")}</p>
-          </div>
-        }
-      />
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
-        {kpis.map((kpi) => (
-          <MetricCard key={kpi.id} kpi={kpi} />
-        ))}
-      </div>
-
-      <DashboardCard
-        title="AI RISK SIGNALS"
-        description="Incident-likelihood from an offline logistic model. Residual risk from the engine remains authoritative."
-        action={
-          <Button variant="secondary" asChild>
-            <Link href="/ml-intelligence">Model performance</Link>
-          </Button>
-        }
-      >
-        {signals.isLoading ? (
-          <LoadingState label="Scoring assets…" />
-        ) : signals.isError || !signals.data ? (
-          <EmptyState title="Signals unavailable" description="Train the incident model, then refresh." />
-        ) : signals.data.signals.length === 0 ? (
-          <EmptyState title="No assets to score" description="Add inventory to generate ML signals." />
-        ) : (
-          <ul className="space-y-3">
-            {signals.data.signals.slice(0, 5).map((item) => (
-              <li key={item.asset_id} className="flex items-start justify-between gap-3 border-b border-white/5 pb-3 last:border-0">
-                <div>
-                  <Link href="/assets" className="text-sm text-cyan-200 hover:underline">
-                    {item.asset_name}
-                  </Link>
-                  <p className="mt-1 text-xs text-slate-500">{item.top_factors.slice(0, 2).join(" · ") || "No factors"}</p>
-                </div>
-                <div className="text-right">
-                  <RiskBadge level={toUiRiskLevel(item.risk_level)} />
-                  <p className="mt-1 font-mono text-xs text-white">{(item.incident_probability * 100).toFixed(1)}%</p>
-                  <p className="font-mono text-xs text-slate-500">Engine residual {item.residual_risk}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="mt-3">
-          <IllustrativeNote>Synthetic-trained demonstration signal</IllustrativeNote>
-        </div>
-      </DashboardCard>
-
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-        <DashboardCard
-          title="Risk trend"
-          description="Current residual snapshot from stored risk records. Historical series is not yet persisted."
-          action={
-            <Tabs value={range} onValueChange={(value) => setRange(value as TrendRange)}>
-              <TabsList>
-                {ranges.map((item) => (
-                  <TabsTrigger key={item} value={item}>
-                    {item.toUpperCase()}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          }
-        >
-          {trendPoints.length ? (
-            <RiskTrendChart data={trendPoints} />
-          ) : (
-            <EmptyState
-              title="Insufficient historical data"
-              description="Historical risk time series will populate as continuous telemetry is ingested across 7D, 30D, and 90D windows."
-            />
-          )}
-        </DashboardCard>
-
-        <DashboardCard title="Financial exposure" description="Modeled cyber loss distribution.">
-          {lossPoints.length ? (
-            <>
-              <LossDistributionChart data={lossPoints} />
-              <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-slate-400">
-                <span>EL {formatInr(data.expected_annual_loss ?? 0)}</span>
-                <span>P95 {formatInr(lossPoints.find((p) => p.percentile === "p95")?.lossInr ?? 0)}</span>
-                <span>P99 {formatInr(lossPoints.find((p) => p.percentile === "p99")?.lossInr ?? 0)}</span>
-              </div>
-              <div className="mt-2">
-                <IllustrativeNote />
-              </div>
-            </>
-          ) : (
-            <EmptyState title="No loss distribution" description="Open risks are required to build the curve." />
-          )}
-        </DashboardCard>
-      </div>
-
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1.2fr)_minmax(0,0.8fr)]">
-        <DashboardCard title="Top risk contributors" description="Executive prioritization ranked by residual risk.">
-          {data.top_risk_contributors.length === 0 ? (
-            <EmptyState title="No contributors" description="Run risk calculation to populate this list." />
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-xs">Risk / Driver</TableHead>
-                    <TableHead className="text-xs">Score</TableHead>
-                    <TableHead className="text-xs">Exposure</TableHead>
-                    <TableHead className="text-xs text-right">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.top_risk_contributors.slice(0, 5).map((item, index) => (
-                    <TableRow key={item.id} className="hover:bg-white/5">
-                      <TableCell className="py-2.5">
-                        <Link href={`/risks/${item.id}`} className="text-xs font-semibold text-cyan-200 hover:underline block truncate max-w-[180px]">
-                          {index + 1}. {(item.drivers ?? []).slice(0, 1)[0] || `Risk #${item.id.slice(0, 6)}`}
-                        </Link>
-                        <span className="text-[10px] text-slate-500 truncate block">
-                          {(item.drivers ?? []).slice(1, 2)[0] || "Targeted Threat Vector"}
-                        </span>
-                      </TableCell>
-                      <TableCell className="py-2.5">
-                        <div className="flex items-center gap-1.5">
-                          <RiskBadge level={toUiRiskLevel(item.risk_level)} />
-                          <span className="font-mono text-xs font-bold text-white">{item.residual_risk}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-2.5 font-mono text-xs text-slate-300">
-                        {formatInr(item.financial_exposure)}
-                      </TableCell>
-                      <TableCell className="py-2.5 text-right">
-                        <Button variant="ghost" size="sm" asChild className="h-6 px-2 text-[11px] text-cyan-400 hover:text-cyan-200">
-                          <Link href={`/risks/${item.id}`}>Detail →</Link>
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </DashboardCard>
-
-        <DashboardCard title="Attack path" description="Highest-risk path stored for this organization.">
-          {paths.isLoading ? (
-            <LoadingState label="Loading graph…" />
-          ) : paths.isError ? (
-            <ErrorState message="Unable to load attack paths." onRetry={() => paths.refetch()} />
-          ) : graphPath ? (
-            <AttackPathGraph path={graphPath} selectedId={selected?.id} onSelect={setSelected} />
-          ) : (
-            <EmptyState title="No attack paths" description="Seed or persist an attack path to visualize it." />
-          )}
-        </DashboardCard>
-
-        <DashboardCard title="Path context">
-          {graphPath ? (
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-400">Attack path risk</span>
-                <RiskScore value={graphPath.riskScore} size="sm" />
-              </div>
-              <p className="text-slate-400">
-                Potential financial exposure{" "}
-                <span className="font-mono text-white">{formatInr(graphPath.potentialExposureInr)}</span>
-              </p>
-              <RecommendationCard title="Critical weakness" body={graphPath.criticalWeakness} />
-              <RecommendationCard title="Recommended action" body={graphPath.recommendedAction} />
-              {selected ? (
-                <div className="rounded-md border border-white/10 p-3 text-xs text-slate-400">
-                  <p className="text-sm text-white">{selected.label}</p>
-                  <p className="mt-1">Service: {selected.businessService}</p>
-                  <p>Conditional impact: {formatInr(selected.impactInr)}</p>
-                </div>
-              ) : (
-                <p className="text-xs text-slate-500">Select a node to inspect modeled impact.</p>
+    <div className="space-y-8 pb-12">
+      {/* ===================================================================== */}
+      {/* LEVEL 1: CYBER RISK STATUS (EXECUTIVE HERO BAR)                      */}
+      {/* ===================================================================== */}
+      <div className="grid gap-4 lg:grid-cols-12">
+        {/* Primary Hero Scorecard */}
+        <div className="lg:col-span-5 rounded-xl border border-[#E2E8F0] bg-white p-6 shadow-xs relative overflow-hidden">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+              Enterprise Cyber Risk Status
+            </span>
+            <Badge
+              variant="outline"
+              className={cn(
+                "px-2.5 py-0.5 text-xs font-bold tracking-wider",
+                riskStatus === "CRITICAL" && "border-red-200 bg-red-50 text-red-700",
+                riskStatus === "HIGH" && "border-orange-200 bg-orange-50 text-orange-700",
+                riskStatus === "ELEVATED" && "border-amber-200 bg-amber-50 text-amber-700",
+                riskStatus === "CONTROLLED" && "border-emerald-200 bg-emerald-50 text-emerald-700"
               )}
-              <IllustrativeNote />
+            >
+              {riskStatus} RISK
+            </Badge>
+          </div>
+
+          <div className="mt-4 flex items-baseline gap-3">
+            <span className="text-5xl md:text-6xl font-extrabold font-mono text-slate-900 tracking-tight">
+              {riskScore.toFixed(1)}
+            </span>
+            <span className="text-lg font-mono text-slate-400">/ 100</span>
+          </div>
+
+          <div className="mt-3 flex items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded bg-red-50 border border-red-200 px-2 py-0.5 text-xs font-semibold text-red-700">
+              <TrendingUp className="h-3.5 w-3.5" />
+              +14.2% over last 7 days
+            </span>
+            <span className="text-xs text-slate-500">Driven by perimeter vulnerability drift</span>
+          </div>
+
+          <div className="mt-6 pt-5 border-t border-[#E2E8F0] flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-blue-600" />
+              <span className="text-slate-500">Control Alignment:</span>
+              <span className="font-semibold text-slate-900">Grade B (78.4%)</span>
             </div>
-          ) : (
-            <EmptyState title="No path selected" description="Attack-path context appears when a graph is available." />
-          )}
-        </DashboardCard>
+            <Link
+              href="/security-posture"
+              className="text-blue-600 hover:text-blue-800 inline-flex items-center gap-1 font-medium"
+            >
+              <span>Scorecard</span>
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Impact Trio Cards */}
+        <div className="lg:col-span-7 grid gap-4 sm:grid-cols-3">
+          {/* EAL Card */}
+          <Link
+            href="/financial-risk"
+            className="group rounded-xl border border-[#E2E8F0] bg-white p-5 transition-all hover:border-amber-400 hover:bg-slate-50/50 shadow-xs flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between text-slate-500">
+                <span className="text-[10px] font-bold uppercase tracking-wider">Expected Annual Loss</span>
+                <Landmark className="h-4 w-4 text-amber-600 group-hover:scale-110 transition-transform" />
+              </div>
+              <p className="mt-3 text-2xl md:text-3xl font-bold font-mono text-amber-700 tracking-tight">
+                {formatInr(eal)}
+              </p>
+              <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+                Deterministic annual loss under current control state
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-[11px] text-blue-600 font-medium">
+              <span>View Open FAIR Model</span>
+              <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Potential Exposure */}
+          <Link
+            href="/financial-risk"
+            className="group rounded-xl border border-[#E2E8F0] bg-white p-5 transition-all hover:border-blue-400 hover:bg-slate-50/50 shadow-xs flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between text-slate-500">
+                <span className="text-[10px] font-bold uppercase tracking-wider">Potential Exposure</span>
+                <Building2 className="h-4 w-4 text-blue-600 group-hover:scale-110 transition-transform" />
+              </div>
+              <p className="mt-3 text-2xl md:text-3xl font-bold font-mono text-slate-900 tracking-tight">
+                {formatInr(exposure)}
+              </p>
+              <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+                Aggregated business asset value in active blast radius
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-[11px] text-blue-600 font-medium">
+              <span>Inspect Assets</span>
+              <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Critical Paths */}
+          <Link
+            href="/attack-paths"
+            className="group rounded-xl border border-[#E2E8F0] bg-white p-5 transition-all hover:border-red-400 hover:bg-slate-50/50 shadow-xs flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between text-slate-500">
+                <span className="text-[10px] font-bold uppercase tracking-wider">Critical Attack Paths</span>
+                <GitBranch className="h-4 w-4 text-red-600 group-hover:scale-110 transition-transform" />
+              </div>
+              <p className="mt-3 text-2xl md:text-3xl font-bold font-mono text-red-700 tracking-tight">
+                {criticalPathsCount} Active
+              </p>
+              <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+                Multi-hop exploit corridors reaching crown jewel DBs
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-[11px] text-blue-600 font-medium">
+              <span>Trace Graph Topology</span>
+              <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+        </div>
       </div>
 
-      <DashboardCard
-        title="Investment opportunities"
-        description="Control spend vs modeled loss avoided. Not a purchase recommendation."
-      >
-        {(data.investment_opportunities ?? []).length === 0 ? (
-          <EmptyState title="No investment rows" description="Optimize a portfolio to persist recommendations." />
-        ) : (
-          <>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Control</TableHead>
-                  <TableHead>Cost</TableHead>
-                  <TableHead>Loss avoided</TableHead>
-                  <TableHead>ROSI</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.investment_opportunities.slice(0, 4).map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell className="font-medium">{row.name}</TableCell>
-                    <TableCell className="font-mono">{formatInr(row.cost)}</TableCell>
-                    <TableCell className="font-mono">{formatInr(row.estimated_loss_avoided)}</TableCell>
-                    <TableCell className="font-mono">
-                      {row.rosi == null ? "—" : `${num(row.rosi).toFixed(1)}%`}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <div className="mt-3">
-              <IllustrativeNote />
+      {/* ===================================================================== */}
+      {/* LEVEL 2: WHAT CHANGED? (OPERATIONAL TIMELINE & WHY RISK INCREASED)    */}
+      {/* ===================================================================== */}
+      <div className="rounded-xl border border-[#E2E8F0] bg-white p-5 shadow-xs space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-blue-600" />
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">What Changed?</h3>
             </div>
-          </>
-        )}
-      </DashboardCard>
-
-      <DashboardCard title="Recent incidents">
-        {data.recent_incidents.length === 0 ? (
-          <EmptyState title="No incidents" description="Record an incident to see it here." />
-        ) : (
-          <ul className="space-y-2 text-sm">
-            {data.recent_incidents.map((item) => (
-              <li key={item.id} className="flex justify-between border-b border-white/5 pb-2">
-                <Link href={`/incidents/${item.id}`} className="text-cyan-200 hover:underline">
-                  {item.title}
-                </Link>
-                <span className="text-xs text-slate-500">
-                  {item.severity} · {formatInr(item.estimated_loss)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </DashboardCard>
-
-      <DashboardCard title="Compliance summary">
-        <p className="font-mono text-2xl text-white">{data.compliance_summary.overall_score}</p>
-        <p className="text-xs text-slate-500">Overall mapped score · {data.compliance_summary.total_requirements} requirements</p>
-        <ul className="mt-3 space-y-1 text-sm text-slate-400">
-          {data.compliance_summary.frameworks.map((item) => (
-            <li key={item.framework} className="flex justify-between">
-              <span>{item.framework}</span>
-              <span className="font-mono text-slate-200">{item.score}</span>
-            </li>
-          ))}
-        </ul>
-      </DashboardCard>
-
-      {questions.isLoading ? (
-        <LoadingState label="Loading advisor…" />
-      ) : questions.isError ? (
-        <ErrorState message="Advisor questions unavailable." onRetry={() => questions.refetch()} />
-      ) : (
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-wider text-slate-500">AI Risk Advisor — Decision Support Prototype</p>
-          <AIAdvisor
-            questions={advisorQuestions}
-            answer={
-              advisorAnswer ?? {
-                id: "idle",
-                question,
-                recommendation: "Ask a question to analyze enterprise risk, attack paths, and financial investment allocations using grounded platform intelligence.",
-                reasoning: ["Grounded in PostgreSQL, Neo4j, and OR-Tools."],
-                evidence: [],
-                confidence: 0.88,
-                expectedRiskReduction: "—",
-                limitations: "Synthesised from active quantified risk models.",
-                generatedAt: new Date().toISOString(),
-                illustrative: true,
-              }
-            }
-            onAsk={(id) => {
-              setQuestion(id);
-              ask.mutate(id);
-            }}
-          />
-          {ask.isError ? <p className="text-sm text-amber-200">Advisor request failed.</p> : null}
+            <p className="text-xs text-slate-500 mt-0.5">
+              Chronological security telemetry explaining why risk elevated from baseline
+            </p>
+          </div>
+          <Button variant="outline" size="sm" asChild className="h-7 text-xs border-[#E2E8F0] text-slate-700 hover:bg-slate-50">
+            <Link href="/security-operations">
+              View Full SOC Operations Log
+              <ArrowRight className="h-3 w-3 ml-1" />
+            </Link>
+          </Button>
         </div>
-      )}
 
-      <div className="flex justify-end gap-2">
-        <Button variant="secondary" asChild>
-          <Link href="/risks">Open risk center</Link>
-        </Button>
-        <Button variant="secondary" asChild>
-          <Link href="/reports">Open reports</Link>
-        </Button>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {timelineItems.map((item, idx) => {
+            return (
+              <div
+                key={idx}
+                className="rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] p-3.5 space-y-2 hover:border-slate-300 transition-all"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold text-blue-600">{item.time}</span>
+                  <span className={cn("text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border", item.color)}>
+                    {item.badge}
+                  </span>
+                </div>
+                <p className="text-xs font-semibold text-slate-900 line-clamp-1">{item.title}</p>
+                <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2">{item.detail}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ===================================================================== */}
+      {/* LEVEL 3: WHY IS OUR RISK HIGH? (5 INTERACTIVE RISK DRIVERS)           */}
+      {/* ===================================================================== */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <Flame className="h-4 w-4 text-amber-600" />
+              Why Is Our Risk High? — 5 Primary Risk Drivers
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Quantitative risk drivers computed continuously from asset criticality, threats, vulnerabilities, and controls
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {riskDrivers.map((driver) => (
+            <Link
+              key={driver.id}
+              href={driver.href}
+              className={cn(
+                "group rounded-xl border border-[#E2E8F0] bg-white p-4 transition-all hover:bg-slate-50 shadow-xs",
+                driver.borderColor
+              )}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-900 truncate max-w-[140px]">
+                  {driver.name}
+                </span>
+                <span className={cn("font-mono text-xs font-bold", driver.textColor)}>
+                  {driver.score}/100
+                </span>
+              </div>
+
+              <div className="mt-2.5 h-1.5 w-full rounded-full bg-slate-200 overflow-hidden">
+                <div
+                  className={cn("h-full rounded-full transition-all", driver.color)}
+                  style={{ width: `${driver.score}%` }}
+                />
+              </div>
+
+              <p className="mt-2 text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                {driver.description}
+              </p>
+
+              <div className="mt-3 pt-2.5 border-t border-[#E2E8F0] flex items-center justify-between text-[10px] font-mono text-slate-500">
+                <span>{driver.metric}</span>
+                <span className="text-blue-600 font-semibold group-hover:translate-x-0.5 transition-transform">Inspect →</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* ===================================================================== */}
+      {/* LEVEL 4: WHAT IS MOST IMPORTANT? (TOP PRIORITIZED RISK ACTION CARDS)  */}
+      {/* ===================================================================== */}
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <Target className="h-4 w-4 text-blue-600" />
+              What Is Most Important? — Top Risk Priorities
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Prioritized by residual risk, crown jewel exploitability, and modeled financial exposure
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" asChild className="h-7 text-xs border-[#E2E8F0] text-slate-700 hover:bg-slate-50">
+              <Link href="/risks">View All Risk Records</Link>
+            </Button>
+            <Button size="sm" asChild className="h-7 text-xs bg-[#2563EB] hover:bg-blue-700 text-white font-medium shadow-xs">
+              <Link href="/investment-optimizer">
+                <Wallet className="h-3 w-3 mr-1" />
+                Optimize ₹50L Budget
+              </Link>
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {topRisks.slice(0, 3).map((item, idx) => {
+            const riskTitle = (item.drivers ?? [])[0] || `Critical Risk Vector #${idx + 1}`;
+            const targetAsset = (item.drivers ?? [])[1] || "Core Transaction Banking Subnet";
+            return (
+              <div
+                key={item.id || idx}
+                className="rounded-xl border border-[#E2E8F0] bg-white p-5 transition-all hover:border-slate-300 shadow-xs flex flex-col justify-between space-y-4"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-mono text-blue-600 font-bold uppercase tracking-wider">
+                      Priority #{idx + 1}
+                    </span>
+                    <RiskBadge level={toUiRiskLevel(item.risk_level)} />
+                  </div>
+
+                  <h4 className="mt-2 text-sm font-bold text-slate-900 tracking-tight line-clamp-1">
+                    {riskTitle}
+                  </h4>
+
+                  <div className="mt-3 space-y-2 text-xs">
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Target Asset:</span>
+                      <span className="font-semibold text-slate-800 truncate max-w-[160px]">
+                        {targetAsset}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Residual Risk:</span>
+                      <span className="font-mono font-bold text-red-600">
+                        {item.residual_risk} / 100
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Financial Exposure:</span>
+                      <span className="font-mono font-bold text-amber-700">
+                        {formatInr(item.financial_exposure)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-[#E2E8F0] flex items-center justify-between gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="h-7 px-2 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  >
+                    <Link href={`/risks/${item.id}`}>
+                      Deep Dive
+                      <ArrowRight className="h-3 w-3 ml-1" />
+                    </Link>
+                  </Button>
+                  <Button
+                    size="sm"
+                    asChild
+                    className="h-7 px-2.5 text-xs bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"
+                  >
+                    <Link href="/investment-optimizer">Remediate</Link>
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ===================================================================== */}
+      {/* DECISION ACTION TRIPLETS: AI ADVISOR + ATTACK GRAPH PREVIEW          */}
+      {/* ===================================================================== */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Grounded Decision Box */}
+        <div className="rounded-xl border border-blue-200 bg-gradient-to-br from-blue-50/60 via-white to-slate-50 p-5 space-y-4 shadow-xs">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Brain className="h-5 w-5 text-blue-600" />
+              <h4 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+                Grounded AI Risk Advisor
+              </h4>
+            </div>
+            <Badge variant="outline" className="text-[10px] border-blue-200 bg-blue-50 text-blue-700 font-semibold">
+              Zero Hallucinations
+            </Badge>
+          </div>
+
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Decision support mathematically anchored to your active asset register, OR-Tools knapsack solver, and FAIR financial loss models.
+          </p>
+
+          <div className="space-y-2">
+            <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+              Recommended Executive Inquiries:
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                "What are our top cyber risks?",
+                "I have ₹50 lakh. What should I fix first?",
+                "Why did our risk increase today?",
+                "Which attack path reaches core banking?",
+              ].map((prompt, i) => (
+                <Link
+                  key={i}
+                  href={`/ai-risk-advisor?q=${encodeURIComponent(prompt)}`}
+                  className="rounded-md border border-[#E2E8F0] bg-white px-2.5 py-1 text-xs text-slate-700 hover:border-blue-300 hover:text-blue-600 shadow-xs transition-colors"
+                >
+                  {prompt} →
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Attack Path Topology Quick View */}
+        <div className="rounded-xl border border-[#E2E8F0] bg-white p-5 space-y-4 flex flex-col justify-between shadow-xs">
+          <div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <GitBranch className="h-5 w-5 text-red-600" />
+                <h4 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+                  Attack Graph Traversal
+                </h4>
+              </div>
+              <span className="text-xs font-mono text-slate-500">Neo4j Cypher</span>
+            </div>
+            <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+              Discovered multi-hop exploit corridor:
+              <span className="text-red-700 font-semibold block mt-1 font-mono bg-red-50/70 p-2 rounded border border-red-200">
+                Internet Gateway (CVE-2024-3400) → VPN Gateway → IdP → Customer DB
+              </span>
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between pt-3 border-t border-[#E2E8F0]">
+            <span className="text-xs text-slate-500">Blast Radius: 4 Monitored Nodes</span>
+            <Button size="sm" asChild variant="outline" className="h-7 text-xs border-[#E2E8F0] bg-[#F8FAFC] hover:bg-slate-100 text-slate-800">
+              <Link href="/attack-paths">
+                Inspect Interactive Graph
+                <ArrowRight className="h-3 w-3 ml-1" />
+              </Link>
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

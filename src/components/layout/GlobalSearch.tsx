@@ -59,7 +59,7 @@ export function GlobalSearch() {
         onChange={(event) => setQuery(event.target.value)}
       />
       {query.trim().length >= 2 ? (
-        <ul className="absolute z-50 mt-1 w-full overflow-hidden rounded-md border border-white/10 bg-[#10182a] py-1 shadow-xl">
+        <ul className="absolute z-50 mt-1 w-full overflow-hidden rounded-md border border-[#E2E8F0] bg-white py-1 shadow-xl">
           {results.length === 0 ? (
             <li className="px-3 py-2 text-xs text-slate-500">No matches in live inventory.</li>
           ) : (
@@ -67,14 +67,14 @@ export function GlobalSearch() {
               <li key={`${item.kind}-${item.id}`}>
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-white/5"
+                  className="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-slate-100 transition-colors"
                   onClick={() => {
                     router.push(item.href);
                     setQuery("");
                   }}
                 >
-                  <span className="truncate text-slate-100">{item.label}</span>
-                  <span className="ml-3 text-[10px] uppercase tracking-wider text-slate-500">{item.kind}</span>
+                  <span className="truncate text-slate-800 font-medium">{item.label}</span>
+                  <span className="ml-3 text-[10px] uppercase font-semibold tracking-wider text-blue-600">{item.kind}</span>
                 </button>
               </li>
             ))

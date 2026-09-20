@@ -4,3 +4,5 @@ export * from "./FinancialMetric";
 export * from "./EvidenceChip";
 export * from "./TooltipExplainer";
 export * from "./CommandPalette";
+export * from "./DetailDrawer";
+export * from "./EnterpriseDataTable";

@@ -15,33 +15,33 @@ const severityConfig: Record<
   { bg: string; text: string; border: string; executive: string }
 > = {
   CRITICAL: {
-    bg: "bg-rose-950/40",
-    text: "text-rose-300",
-    border: "border-rose-500/30",
+    bg: "bg-red-50",
+    text: "text-red-700",
+    border: "border-red-200",
     executive: "Critical business exposure",
   },
   HIGH: {
-    bg: "bg-amber-950/40",
-    text: "text-amber-300",
-    border: "border-amber-500/30",
+    bg: "bg-orange-50",
+    text: "text-orange-700",
+    border: "border-orange-200",
     executive: "High impact potential",
   },
   MEDIUM: {
-    bg: "bg-blue-950/40",
-    text: "text-blue-300",
-    border: "border-blue-500/30",
+    bg: "bg-amber-50",
+    text: "text-amber-700",
+    border: "border-amber-200",
     executive: "Moderate exposure",
   },
   LOW: {
-    bg: "bg-slate-900/60",
-    text: "text-slate-300",
-    border: "border-slate-700/40",
+    bg: "bg-green-50",
+    text: "text-green-700",
+    border: "border-green-200",
     executive: "Controlled risk",
   },
   INFO: {
-    bg: "bg-cyan-950/30",
-    text: "text-cyan-300",
-    border: "border-cyan-600/30",
+    bg: "bg-sky-50",
+    text: "text-sky-700",
+    border: "border-sky-200",
     executive: "Informational signal",
   },
 };
@@ -71,7 +71,7 @@ export function SeverityBadge({
         <span className="font-mono text-[10px] opacity-85">({cvss.toFixed(1)})</span>
       )}
       {showExecutiveLabel && (
-        <span className="hidden xl:inline border-l border-white/10 pl-1.5 text-[10px] opacity-80">
+        <span className="hidden xl:inline border-l border-slate-300 pl-1.5 text-[10px] opacity-80">
           {cfg.executive}
         </span>
       )}

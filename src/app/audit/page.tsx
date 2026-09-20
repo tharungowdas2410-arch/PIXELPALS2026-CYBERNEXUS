@@ -105,7 +105,7 @@ export default function AuditPage() {
           <CardHeader className="pb-2">
             <CardDescription className="text-xs uppercase tracking-wider">Storage & Immutability</CardDescription>
             <CardTitle className="text-lg font-semibold flex items-center gap-2">
-              <Lock className="h-5 w-5 text-emerald-400" />
+              <Lock className="h-5 w-5 text-emerald-600" />
               WORM Compliant
             </CardTitle>
           </CardHeader>
@@ -129,9 +129,9 @@ export default function AuditPage() {
       </div>
 
       {error && (
-        <Card className="border-rose-800 bg-rose-950/20 text-rose-300">
+        <Card className="border-rose-200 bg-rose-50 text-rose-800 shadow-sm">
           <CardContent className="flex items-center gap-3 py-3">
-            <AlertCircle className="h-5 w-5 shrink-0 text-rose-400" />
+            <AlertCircle className="h-5 w-5 shrink-0 text-rose-600" />
             <p className="text-sm">{error}</p>
           </CardContent>
         </Card>
@@ -237,12 +237,12 @@ export default function AuditPage() {
                           </td>
                           <td className="p-3">
                             {log.result === "SUCCESS" ? (
-                              <Badge variant="outline" className="border-emerald-500/40 bg-emerald-950/20 text-emerald-400 text-[10px]">
+                              <Badge variant="outline" className="border-emerald-200 bg-emerald-50 text-emerald-700 text-[10px]">
                                 <CheckCircle2 className="mr-1 h-3 w-3" />
                                 SUCCESS
                               </Badge>
                             ) : (
-                              <Badge variant="outline" className="border-rose-500/40 bg-rose-950/20 text-rose-400 text-[10px]">
+                              <Badge variant="outline" className="border-rose-200 bg-rose-50 text-rose-700 text-[10px]">
                                 <XCircle className="mr-1 h-3 w-3" />
                                 FAILED
                               </Badge>

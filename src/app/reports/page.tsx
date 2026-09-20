@@ -93,22 +93,22 @@ export default function ReportsHubPage() {
       </PageHeader>
 
       {error && (
-        <Card className="border-rose-800 bg-rose-950/20 text-rose-300">
+        <Card className="border-rose-200 bg-rose-50 text-rose-800 shadow-sm">
           <CardContent className="flex items-center justify-between py-3">
             <div className="flex items-center gap-3">
-              <AlertTriangle className="h-5 w-5 shrink-0 text-rose-400" />
+              <AlertTriangle className="h-5 w-5 shrink-0 text-rose-600" />
               <div>
-                <p className="text-xs font-semibold text-rose-300 uppercase tracking-wide">
+                <p className="text-xs font-semibold text-rose-900 uppercase tracking-wide">
                   Executive Report Generation Failed
                 </p>
-                <p className="text-sm text-rose-200">{error}</p>
+                <p className="text-sm text-rose-700">{error}</p>
               </div>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={fetchReport}
-              className="border-rose-700 bg-rose-900/30 text-rose-200 hover:bg-rose-900/50 text-xs shrink-0"
+              className="border-rose-300 bg-white text-rose-700 hover:bg-rose-100 text-xs shrink-0"
             >
               <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
               Retry
@@ -120,10 +120,10 @@ export default function ReportsHubPage() {
       {/* Section 36: Standardized Report Catalog */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
             Enterprise Cybersecurity Report Catalog
           </p>
-          <span className="text-[11px] text-cyan-400 font-mono">6 Standard Reports Available</span>
+          <span className="text-[11px] text-blue-600 font-mono font-medium">6 Standard Reports Available</span>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
@@ -134,24 +134,24 @@ export default function ReportsHubPage() {
             { id: "attack_path", title: "Attack Path Report", target: "financial", desc: "Neo4j crown-jewel traversal chains, blast radius, and critical bottlenecks." },
             { id: "incident", title: "Incident Report", target: "overview", desc: "Real-time telemetry drift, active alerts, and incident-to-financial impact." },
           ].map((item) => (
-            <Card key={item.id} className="border-white/10 bg-[#0c1322] p-4 flex flex-col justify-between hover:border-slate-700 transition-colors">
+            <Card key={item.id} className="border-slate-200 bg-white p-4 flex flex-col justify-between hover:border-slate-300 shadow-sm transition-colors">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Badge variant="outline" className="border-cyan-500/30 bg-cyan-950/20 text-cyan-300 text-[10px]">
+                  <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700 text-[10px]">
                     PDF / JSON
                   </Badge>
-                  <FileText className="h-4 w-4 text-slate-500" />
+                  <FileText className="h-4 w-4 text-slate-400" />
                 </div>
-                <p className="text-sm font-bold text-slate-100">{item.title}</p>
-                <p className="text-xs text-slate-400 leading-relaxed">{item.desc}</p>
+                <p className="text-sm font-bold text-slate-900">{item.title}</p>
+                <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
               </div>
-              <div className="flex items-center gap-2 pt-3 mt-2 border-t border-white/5">
+              <div className="flex items-center gap-2 pt-3 mt-2 border-t border-slate-100">
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={fetchReport}
                   disabled={loading}
-                  className="h-7 text-[11px] px-2 border-white/10 text-slate-300 hover:bg-slate-800"
+                  className="h-7 text-[11px] px-2 border-slate-200 text-slate-700 hover:bg-slate-50"
                 >
                   Generate
                 </Button>
@@ -162,7 +162,7 @@ export default function ReportsHubPage() {
                     const elem = document.getElementById("reports-tabs");
                     elem?.scrollIntoView({ behavior: "smooth" });
                   }}
-                  className="h-7 text-[11px] px-2 border-cyan-500/30 text-cyan-300 hover:bg-cyan-950/30"
+                  className="h-7 text-[11px] px-2 border-blue-200 text-blue-700 hover:bg-blue-50"
                 >
                   Preview
                 </Button>
@@ -171,7 +171,7 @@ export default function ReportsHubPage() {
                   variant="ghost"
                   onClick={handleDownloadJSON}
                   disabled={!report}
-                  className="h-7 text-[11px] px-2 text-slate-400 hover:text-white ml-auto"
+                  className="h-7 text-[11px] px-2 text-slate-500 hover:text-slate-900 ml-auto"
                 >
                   <Download className="h-3 w-3 mr-1" />
                   JSON
@@ -202,7 +202,7 @@ export default function ReportsHubPage() {
               <Card className="border-border/60">
                 <CardHeader className="pb-2">
                   <CardDescription className="text-xs uppercase tracking-wider">Overall Posture</CardDescription>
-                  <CardTitle className="text-3xl font-bold tracking-tight text-emerald-400">
+                  <CardTitle className="text-3xl font-bold tracking-tight text-emerald-600">
                     {report.executive_summary.posture_score} / 100
                   </CardTitle>
                 </CardHeader>
@@ -226,7 +226,7 @@ export default function ReportsHubPage() {
               <Card className="border-border/60">
                 <CardHeader className="pb-2">
                   <CardDescription className="text-xs uppercase tracking-wider">95% Value at Risk (VaR)</CardDescription>
-                  <CardTitle className="text-2xl font-bold tracking-tight text-rose-400">
+                  <CardTitle className="text-2xl font-bold tracking-tight text-rose-600">
                     {formatInr(report.financial_risk_quantification.value_at_risk_95_inr)}
                   </CardTitle>
                 </CardHeader>
@@ -238,7 +238,7 @@ export default function ReportsHubPage() {
               <Card className="border-border/60">
                 <CardHeader className="pb-2">
                   <CardDescription className="text-xs uppercase tracking-wider">Optimal Portfolio ROSI</CardDescription>
-                  <CardTitle className="text-2xl font-bold tracking-tight text-emerald-400">
+                  <CardTitle className="text-2xl font-bold tracking-tight text-emerald-600">
                     {report.investment_recommendations.portfolio_rosi.toFixed(1)}x
                   </CardTitle>
                 </CardHeader>
@@ -271,7 +271,7 @@ export default function ReportsHubPage() {
             <Card className="border-border/60">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
-                  <ShieldAlert className="h-5 w-5 text-rose-400" />
+                  <ShieldAlert className="h-5 w-5 text-rose-600" />
                   Primary Threat & Vulnerability Drivers
                 </CardTitle>
                 <CardDescription>Top unmitigated risk items requiring executive allocation</CardDescription>
@@ -290,7 +290,7 @@ export default function ReportsHubPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <span className="font-mono font-bold text-rose-400 block">{formatInr(driver.loss)}</span>
+                        <span className="font-mono font-bold text-rose-600 block">{formatInr(driver.loss)}</span>
                         <span className="text-[10px] text-muted-foreground">Expected Loss</span>
                       </div>
                     </div>
@@ -338,7 +338,7 @@ export default function ReportsHubPage() {
             <Card className="border-border/60">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
-                  <FileCheck className="h-5 w-5 text-emerald-400" />
+                  <FileCheck className="h-5 w-5 text-emerald-600" />
                   Multi-Standard Compliance Alignment
                 </CardTitle>
                 <CardDescription>Overall alignment index: {report.compliance_alignment.overall_score}% across {report.compliance_alignment.total_requirements} controls</CardDescription>
@@ -389,7 +389,7 @@ export default function ReportsHubPage() {
                       </div>
                       <div className="text-right">
                         <span className="font-mono font-bold text-primary block">{formatInr(ctl.cost)}</span>
-                        <span className="text-[10px] text-emerald-400 font-semibold">{ctl.rosi.toFixed(1)}x ROSI</span>
+                        <span className="text-[10px] text-emerald-600 font-semibold">{ctl.rosi.toFixed(1)}x ROSI</span>
                       </div>
                     </div>
                   ))}

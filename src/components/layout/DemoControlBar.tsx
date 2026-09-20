@@ -74,26 +74,49 @@ export function DemoControlBar() {
     }
   };
 
+  const STEP_ROUTES: Record<number, { label: string; href: string }> = {
+    1: { label: "Overview", href: "/" },
+    2: { label: "SOC Timeline", href: "/security-operations" },
+    3: { label: "Vulnerabilities", href: "/vulnerabilities" },
+    4: { label: "Threat Intel", href: "/threat-intelligence" },
+    5: { label: "Attack Paths", href: "/attack-paths" },
+    6: { label: "Financial Risk", href: "/financial-risk" },
+    7: { label: "Optimizer Setup", href: "/investment-optimizer" },
+    8: { label: "Optimized Portfolio", href: "/investment-optimizer" },
+    9: { label: "AI Advisor", href: "/ai-risk-advisor" },
+    10: { label: "Evidence Ledger", href: "/blockchain-evidence" },
+    11: { label: "Executive Report", href: "/reports" },
+  };
+
+  const currentRoute = STEP_ROUTES[currentScene] || { label: "Overview", href: "/" };
+
   return (
-    <div className="sticky top-0 z-40 w-full border-b border-amber-500/30 bg-[#0c1220]/95 backdrop-blur px-3 py-1.5 transition-all">
+    <div className="sticky top-0 z-40 w-full border-b border-blue-200 bg-blue-50/90 backdrop-blur px-3 py-1.5 transition-all">
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
         {/* Left: Demo Mode Indicator & Active Scenario */}
         <div className="flex items-center gap-2.5">
-          <span className="inline-flex items-center gap-1.5 rounded bg-amber-500/15 border border-amber-500/40 px-2 py-0.5 text-[10px] font-bold tracking-wider text-amber-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
-            DEMO MODE
+          <span className="inline-flex items-center gap-1.5 rounded bg-blue-100 border border-blue-300 px-2 py-0.5 text-[10px] font-bold tracking-wider text-blue-800">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
+            JUDGE STORYLINE
           </span>
-          <span className="text-slate-400 hidden sm:inline">Scenario:</span>
-          <span className="font-semibold text-slate-200 hidden sm:inline">
-            Cyber Attack Simulation
+          <span className="text-slate-500 hidden sm:inline">Scenario:</span>
+          <span className="font-semibold text-slate-800 hidden sm:inline">
+            Cyber Attack & Capital Allocation
           </span>
-          <span className="text-slate-600 hidden sm:inline">|</span>
-          <span className="font-mono text-cyan-300 font-medium">
-            Step {currentScene} / 11:
+          <span className="text-slate-300 hidden sm:inline">|</span>
+          <span className="font-mono text-blue-700 font-bold bg-white px-2 py-0.5 rounded border border-blue-200">
+            STEP {currentScene} / 11
           </span>
-          <span className="text-white font-medium truncate max-w-[200px] md:max-w-none">
+          <span className="text-slate-900 font-semibold truncate max-w-[180px] md:max-w-none">
             {currentTitle}
           </span>
+          <Link
+            href={currentRoute.href}
+            className="hidden md:inline-flex items-center gap-1 text-[11px] text-blue-600 hover:text-blue-800 underline underline-offset-2 ml-1"
+          >
+            <span>Jump to {currentRoute.label}</span>
+            <ExternalLink className="h-2.5 w-2.5" />
+          </Link>
         </div>
 
         {/* Right: Controls & Controller Link */}
@@ -103,7 +126,7 @@ export function DemoControlBar() {
             size="sm"
             onClick={handlePrev}
             disabled={currentScene <= 1 || nextMutation.isPending}
-            className="h-7 px-2 text-xs border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+            className="h-7 px-2 text-xs border-[#CBD5E1] bg-white text-slate-700 hover:bg-slate-100"
             title="Go to previous scene"
           >
             <ArrowLeft className="h-3 w-3 mr-1" />
@@ -111,11 +134,11 @@ export function DemoControlBar() {
           </Button>
 
           <Button
-            variant="outline"
+            variant="default"
             size="sm"
             onClick={handleNext}
             disabled={currentScene >= 11 || nextMutation.isPending}
-            className="h-7 px-2.5 text-xs border-cyan-500/40 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/20"
+            className="h-7 px-2.5 text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-xs"
             title="Trigger next storytelling scene"
           >
             Next
@@ -127,7 +150,7 @@ export function DemoControlBar() {
             size="sm"
             onClick={() => resetMutation.mutate()}
             disabled={resetMutation.isPending}
-            className="h-7 px-2 text-xs text-rose-300 hover:bg-rose-950/30 hover:text-rose-200"
+            className="h-7 px-2 text-xs text-red-600 hover:bg-red-50 hover:text-red-700"
             title="Purge synthetic telemetry and reset to Scene 1"
           >
             <RotateCcw className="h-3 w-3 mr-1" />
@@ -138,11 +161,11 @@ export function DemoControlBar() {
             <Button
               variant="default"
               size="sm"
-              className="h-7 px-2.5 text-xs bg-cyan-600 hover:bg-cyan-500 text-white font-medium"
+              className="h-7 px-2.5 text-xs bg-blue-700 hover:bg-blue-800 text-white font-medium"
               title="Open full SIH Judge Scenario Deck"
             >
               <Play className="h-3 w-3 mr-1 fill-current" />
-              Demo Deck
+              Demo Hub
             </Button>
           </Link>
         </div>

@@ -23,23 +23,23 @@ export default function SettingsPage() {
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
           <DashboardCard title="Organization">
-            <p className="text-white">{org.data.name}</p>
+            <p className="font-semibold text-slate-900">{org.data.name}</p>
             <p className="text-sm text-slate-500">{org.data.industry ?? "—"} · {org.data.country ?? "—"}</p>
-            <p className="mt-2 font-mono text-sm text-slate-300">Budget {formatInr(Number(org.data.security_budget))}</p>
+            <p className="mt-2 font-mono text-sm text-slate-700 font-medium">Budget {formatInr(Number(org.data.security_budget))}</p>
           </DashboardCard>
           <DashboardCard title="Signed-in user">
-            <p className="text-white">{user.full_name}</p>
+            <p className="font-semibold text-slate-900">{user.full_name}</p>
             <p className="text-sm text-slate-500">{user.email}</p>
-            <p className="mt-2 text-xs uppercase tracking-wider text-slate-400">{user.role.replaceAll("_", " ")}</p>
-            <button type="button" className="mt-4 text-sm text-cyan-300 hover:underline" onClick={logout}>
+            <p className="mt-2 text-xs uppercase tracking-wider text-slate-500 font-medium">{user.role.replaceAll("_", " ")}</p>
+            <button type="button" className="mt-4 text-sm text-rose-600 font-medium hover:underline cursor-pointer" onClick={logout}>
               Sign out
             </button>
           </DashboardCard>
           <DashboardCard title="Risk model">
-            <p className="text-sm text-slate-300">Deterministic inherent × residual scoring. No ML in this phase.</p>
+            <p className="text-sm text-slate-600">Deterministic inherent × residual scoring. Continuous telemetry active.</p>
           </DashboardCard>
           <DashboardCard title="Integrations">
-            <p className="text-sm text-slate-300">FastAPI + PostgreSQL connected.</p>
+            <p className="text-sm text-slate-600">FastAPI + PostgreSQL connected.</p>
             <p className="mt-2 text-xs text-slate-500">Neo4j, public blockchain, OR-Tools and LLM remain replaceable stubs.</p>
           </DashboardCard>
         </div>

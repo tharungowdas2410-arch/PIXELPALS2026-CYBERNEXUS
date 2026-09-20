@@ -73,13 +73,13 @@ export function TooltipExplainer({
         <TooltipTrigger asChild>
           <span className="inline-flex items-center gap-1 cursor-help group">
             {children}
-            <Info className="h-3.5 w-3.5 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+            <Info className="h-3.5 w-3.5 text-slate-400 group-hover:text-blue-600 transition-colors" />
           </span>
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-xs p-3">
-          <p className="font-semibold text-cyan-300 text-xs">{item.title}</p>
-          <p className="mt-1 text-[11px] leading-relaxed text-slate-300">{item.desc}</p>
-          <p className="mt-1.5 text-[9px] uppercase tracking-wider text-slate-500 border-t border-white/5 pt-1">
+          <p className="font-semibold text-blue-700 text-xs">{item.title}</p>
+          <p className="mt-1 text-[11px] leading-relaxed text-slate-600">{item.desc}</p>
+          <p className="mt-1.5 text-[9px] uppercase tracking-wider text-slate-400 border-t border-slate-100 pt-1">
             Illustrative Quantitative Model
           </p>
         </TooltipContent>

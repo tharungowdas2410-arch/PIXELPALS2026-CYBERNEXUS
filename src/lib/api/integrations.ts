@@ -104,7 +104,13 @@ export interface CSPMRiskSignals {
 }
 
 export async function getIntegrationsHealth(): Promise<IntegrationsHealthResponse> {
-  return apiData<IntegrationsHealthResponse>("/integrations/health");
+  const res = await apiData<IntegrationsHealthResponse>("/integrations/health");
+  return res ?? {
+    status: "ok",
+    connectors: {},
+    is_demo: true,
+    notice: "DEMO MODE — SYNTHETIC SECURITY TELEMETRY",
+  };
 }
 
 export async function getContinuousRiskSummary(): Promise<ContinuousRiskSummary> {

@@ -49,16 +49,16 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="grid min-h-screen place-items-center bg-[#070b14] px-4">
+    <div className="grid min-h-screen place-items-center bg-slate-50 px-4">
       <form
         onSubmit={onSubmit}
-        className="w-full max-w-md space-y-4 rounded-lg border border-white/10 bg-[#0c1322] p-8"
+        className="w-full max-w-md space-y-4 rounded-xl border border-slate-200 bg-white shadow-lg p-8"
       >
         <div className="flex items-center gap-2">
-          <Hexagon className="h-5 w-5 text-cyan-300" />
-          <p className="text-xs tracking-[0.18em] text-cyan-300">CYBERNEXUS</p>
+          <Hexagon className="h-5 w-5 text-blue-600" />
+          <p className="text-xs font-bold tracking-[0.18em] text-blue-600">CYBERNEXUS</p>
         </div>
-        <h1 className="text-2xl font-semibold text-white">Create organization</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Create organization</h1>
         {(
           [
             ["organization_name", "Organization"],
@@ -78,13 +78,13 @@ export default function RegisterPage() {
             />
           </div>
         ))}
-        {error ? <p className="text-sm text-amber-200">{error}</p> : null}
-        <Button type="submit" className="w-full" disabled={pending}>
+        {error ? <p className="text-sm text-rose-600 font-medium">{error}</p> : null}
+        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold" disabled={pending}>
           {pending ? "Creating…" : "Create and continue"}
         </Button>
         <p className="text-xs text-slate-500">
           Already registered?{" "}
-          <Link href="/login" className="text-cyan-300 hover:underline">
+          <Link href="/login" className="text-blue-600 font-semibold hover:underline">
             Sign in
           </Link>
         </p>

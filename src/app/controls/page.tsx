@@ -60,7 +60,7 @@ export default function ControlsPage() {
       <PageHeader
         title="Security Controls"
         description="Effectiveness and implementation status feed residual risk."
-        actions={<Button size="sm" onClick={() => { setError(null); setOpen(true); }}>New control</Button>}
+        actions={<Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-xs" onClick={() => { setError(null); setOpen(true); }}>New control</Button>}
       />
       {query.isLoading ? (
         <LoadingState />
@@ -69,27 +69,27 @@ export default function ControlsPage() {
       ) : (query.data?.data.length ?? 0) === 0 ? (
         <EmptyState title="No controls" description="Add a control to reduce residual risk." />
       ) : (
-        <div className="rounded-lg border border-white/10 bg-[#0c1322]">
+        <div className="rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Control</TableHead>
-                <TableHead>Framework</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Effectiveness</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Annual cost</TableHead>
+              <TableRow className="bg-slate-50 hover:bg-slate-50">
+                <TableHead className="text-slate-700 font-semibold">Control</TableHead>
+                <TableHead className="text-slate-700 font-semibold">Framework</TableHead>
+                <TableHead className="text-slate-700 font-semibold">Category</TableHead>
+                <TableHead className="text-slate-700 font-semibold">Effectiveness</TableHead>
+                <TableHead className="text-slate-700 font-semibold">Status</TableHead>
+                <TableHead className="text-slate-700 font-semibold">Annual cost</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {query.data?.data.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell className="font-medium">{row.name}</TableCell>
-                  <TableCell>{row.framework}</TableCell>
-                  <TableCell>{row.category}</TableCell>
-                  <TableCell className="font-mono">{formatPercent(row.effectiveness * 100)}</TableCell>
-                  <TableCell className="capitalize">{row.implementation_status.replaceAll("_", " ")}</TableCell>
-                  <TableCell className="font-mono">{formatInr(Number(row.annual_cost))}</TableCell>
+                <TableRow key={row.id} className="hover:bg-slate-50/80">
+                  <TableCell className="font-semibold text-slate-900">{row.name}</TableCell>
+                  <TableCell className="text-slate-700">{row.framework}</TableCell>
+                  <TableCell className="text-slate-600">{row.category}</TableCell>
+                  <TableCell className="font-mono font-medium text-blue-700">{formatPercent(row.effectiveness * 100)}</TableCell>
+                  <TableCell className="capitalize text-slate-700">{row.implementation_status.replaceAll("_", " ")}</TableCell>
+                  <TableCell className="font-mono font-semibold text-slate-900">{formatInr(Number(row.annual_cost))}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -97,30 +97,30 @@ export default function ControlsPage() {
         </div>
       )}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="border-slate-200 bg-white text-slate-800 shadow-xl">
           <DialogHeader>
-            <DialogTitle className="text-white">Add control</DialogTitle>
+            <DialogTitle className="text-slate-900 font-bold">Add control</DialogTitle>
           </DialogHeader>
           {(["name", "framework", "category", "effectiveness", "annual_cost"] as const).map((key) => (
             <div key={key} className="mt-3">
-              <Label className="capitalize">{key.replaceAll("_", " ")}</Label>
-              <Input className="mt-1" value={form[key]} onChange={(e) => setForm((c) => ({ ...c, [key]: e.target.value }))} />
+              <Label className="capitalize text-slate-700 font-medium">{key.replaceAll("_", " ")}</Label>
+              <Input className="mt-1 border-slate-200 bg-white text-slate-900 focus:border-blue-500" value={form[key]} onChange={(e) => setForm((c) => ({ ...c, [key]: e.target.value }))} />
             </div>
           ))}
           <div className="mt-3">
-            <Label>Implementation</Label>
+            <Label className="text-slate-700 font-medium">Implementation</Label>
             <Select value={form.implementation_status} onValueChange={(v) => setForm((c) => ({ ...c, implementation_status: v }))}>
-              <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-              <SelectContent>
+              <SelectTrigger className="mt-1 border-slate-200 bg-white text-slate-900 focus:border-blue-500"><SelectValue /></SelectTrigger>
+              <SelectContent className="bg-white border-slate-200 text-xs shadow-lg">
                 {["planned", "partial", "implemented", "not_implemented"].map((item) => (
                   <SelectItem key={item} value={item}>{item.replaceAll("_", " ")}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          {error ? <p className="mt-3 text-sm text-amber-200">{error}</p> : null}
+          {error ? <p className="mt-3 text-sm text-rose-600 font-medium">{error}</p> : null}
           <div className="mt-4 flex justify-end">
-            <Button onClick={save} disabled={mutations.create.isPending}>Save</Button>
+            <Button onClick={save} disabled={mutations.create.isPending} className="bg-blue-600 hover:bg-blue-700 text-white shadow-xs">Save</Button>
           </div>
         </DialogContent>
       </Dialog>

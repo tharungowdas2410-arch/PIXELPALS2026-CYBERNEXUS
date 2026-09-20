@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 
 function tone(score: number) {
-  if (score >= 85) return "text-red-300";
-  if (score >= 70) return "text-amber-200";
-  if (score >= 55) return "text-blue-200";
-  return "text-emerald-300";
+  if (score >= 85) return "text-red-600";
+  if (score >= 70) return "text-amber-600";
+  if (score >= 55) return "text-blue-600";
+  return "text-emerald-600";
 }
 
 export function RiskScore({
@@ -21,7 +21,7 @@ export function RiskScore({
     <div className="flex items-center gap-3">
       <div
         className={cn(
-          "relative rounded-full border border-white/10",
+          "relative rounded-full border border-[#E2E8F0] bg-white",
           size === "lg" ? "h-14 w-14" : size === "sm" ? "h-8 w-8" : "h-11 w-11",
         )}
         aria-label={`Risk score ${value} of ${max}`}
@@ -30,7 +30,7 @@ export function RiskScore({
           <path
             d="M18 2.5 a 15.5 15.5 0 0 1 0 31 a 15.5 15.5 0 0 1 0 -31"
             fill="none"
-            stroke="rgba(255,255,255,0.08)"
+            stroke="#E2E8F0"
             strokeWidth="3"
           />
           <path
@@ -42,12 +42,12 @@ export function RiskScore({
             strokeDasharray={`${pct}, 100`}
           />
         </svg>
-        <span className={cn("absolute inset-0 grid place-items-center font-mono text-xs", tone(value))}>
+        <span className={cn("absolute inset-0 grid place-items-center font-mono text-xs font-bold", tone(value))}>
           {Math.round(value)}
         </span>
       </div>
       {size !== "sm" ? (
-        <span className="font-mono text-sm text-slate-400">/ {max}</span>
+        <span className="font-mono text-sm text-slate-500 font-medium">/ {max}</span>
       ) : null}
     </div>
   );

@@ -22,10 +22,10 @@ export function LossDistributionChart({ data }: { data: LossDistributionPoint[] 
     <div className="h-72 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-          <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
-          <XAxis dataKey="percentile" tick={{ fill: "#8b97ab", fontSize: 11 }} tickLine={false} axisLine={false} />
+          <CartesianGrid stroke="#E2E8F0" vertical={false} />
+          <XAxis dataKey="percentile" tick={{ fill: "#64748B", fontSize: 11 }} tickLine={false} axisLine={false} />
           <YAxis
-            tick={{ fill: "#8b97ab", fontSize: 11 }}
+            tick={{ fill: "#64748B", fontSize: 11 }}
             tickLine={false}
             axisLine={false}
             tickFormatter={(v: number) => `₹${v} Cr`}
@@ -36,13 +36,15 @@ export function LossDistributionChart({ data }: { data: LossDistributionPoint[] 
               "Modeled loss",
             ]}
             contentStyle={{
-              background: "#10182a",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "#ffffff",
+              border: "1px solid #E2E8F0",
               borderRadius: 8,
               fontSize: 12,
+              color: "#0F172A",
+              boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
             }}
           />
-          <Bar dataKey="display" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="display" fill="#2563EB" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

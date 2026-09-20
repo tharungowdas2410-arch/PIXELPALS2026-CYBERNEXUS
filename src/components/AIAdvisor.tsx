@@ -31,44 +31,44 @@ export function AIAdvisor({
             </Button>
           ))}
         </div>
-        <div className="space-y-4 rounded-md border border-white/10 bg-[#0a101c] p-4">
-          <p className="text-sm text-slate-300">Q: {answer.question}</p>
+        <div className="space-y-4 rounded-md border border-[#E2E8F0] bg-[#F8FAFC] p-4">
+          <p className="text-sm font-semibold text-slate-900">Q: {answer.question}</p>
           <section>
-            <h4 className="text-[11px] uppercase tracking-wider text-cyan-300">Recommendation</h4>
-            <p className="mt-1 text-sm text-white">{answer.recommendation}</p>
+            <h4 className="text-[11px] uppercase tracking-wider text-blue-700 font-bold">Recommendation</h4>
+            <p className="mt-1 text-sm text-slate-800 leading-relaxed font-medium">{answer.recommendation}</p>
           </section>
           <section>
-            <h4 className="text-[11px] uppercase tracking-wider text-slate-400">Reasoning</h4>
-            <ul className="mt-1 list-disc space-y-1 pl-4 text-xs text-slate-400">
+            <h4 className="text-[11px] uppercase tracking-wider text-slate-500 font-bold">Reasoning</h4>
+            <ul className="mt-1 list-disc space-y-1 pl-4 text-xs text-slate-600">
               {answer.reasoning.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
           </section>
           <section>
-            <h4 className="text-[11px] uppercase tracking-wider text-slate-400">Evidence</h4>
-            <ul className="mt-1 space-y-1 text-xs text-slate-400">
+            <h4 className="text-[11px] uppercase tracking-wider text-slate-500 font-bold">Evidence</h4>
+            <ul className="mt-1 space-y-1 text-xs text-slate-600">
               {answer.evidence.map((item) => (
                 <li key={item.source}>
-                  <span className="text-slate-200">{item.source}:</span> {item.detail}
+                  <span className="font-semibold text-slate-800">{item.source}:</span> {item.detail}
                 </li>
               ))}
             </ul>
           </section>
-          <div className="grid grid-cols-2 gap-3 text-xs">
+          <div className="grid grid-cols-2 gap-3 text-xs border-t border-[#E2E8F0] pt-3">
             <div>
-              <p className="text-slate-500">Confidence</p>
-              <p className="font-mono text-slate-100">{Math.round(answer.confidence * 100)}%</p>
-              <p className="mt-1 text-[11px] text-slate-500">
+              <p className="text-slate-500 font-medium">Confidence</p>
+              <p className="font-mono font-bold text-slate-900">{Math.round(answer.confidence * 100)}%</p>
+              <p className="mt-1 text-[11px] text-slate-400">
                 Reflects evidence completeness, not certainty.
               </p>
             </div>
             <div>
-              <p className="text-slate-500">Expected risk reduction</p>
-              <p className="text-emerald-300">{answer.expectedRiskReduction}</p>
+              <p className="text-slate-500 font-medium">Expected risk reduction</p>
+              <p className="text-emerald-700 font-bold font-mono">{answer.expectedRiskReduction}</p>
             </div>
           </div>
-          <p className="text-xs leading-5 text-slate-500">{answer.limitations}</p>
+          <p className="text-xs leading-5 text-slate-500 border-t border-[#E2E8F0] pt-2">{answer.limitations}</p>
           <IllustrativeNote />
         </div>
       </div>
@@ -84,9 +84,9 @@ export function RecommendationCard({
   body: string;
 }) {
   return (
-    <div className="rounded-md border border-cyan-500/20 bg-cyan-500/5 p-3">
-      <p className="text-[11px] uppercase tracking-wider text-cyan-300">{title}</p>
-      <p className="mt-1 text-sm text-slate-100">{body}</p>
+    <div className="rounded-md border border-blue-200 bg-blue-50/60 p-3">
+      <p className="text-[11px] uppercase tracking-wider text-blue-700 font-bold">{title}</p>
+      <p className="mt-1 text-sm text-slate-800 font-medium">{body}</p>
     </div>
   );
 }

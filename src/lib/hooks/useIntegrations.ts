@@ -26,7 +26,10 @@ export const INTEGRATIONS_KEYS = {
 export function useIntegrationsHealth() {
   return useQuery({
     queryKey: INTEGRATIONS_KEYS.health(),
-    queryFn: getIntegrationsHealth,
+    queryFn: async () => {
+      const data = await getIntegrationsHealth();
+      return data ?? { status: "ok", connectors: {}, is_demo: true, notice: "" };
+    },
     refetchInterval: 10000,
   });
 }
@@ -34,7 +37,7 @@ export function useIntegrationsHealth() {
 export function useContinuousRiskSummary() {
   return useQuery({
     queryKey: INTEGRATIONS_KEYS.summary(),
-    queryFn: getContinuousRiskSummary,
+    queryFn: async () => (await getContinuousRiskSummary()) ?? null,
     refetchInterval: 6000,
   });
 }
@@ -42,7 +45,7 @@ export function useContinuousRiskSummary() {
 export function useContinuousRiskDrift() {
   return useQuery({
     queryKey: INTEGRATIONS_KEYS.drift(),
-    queryFn: getContinuousRiskDrift,
+    queryFn: async () => (await getContinuousRiskDrift()) ?? null,
     refetchInterval: 10000,
   });
 }
@@ -57,7 +60,7 @@ export function useSecurityEvents(params?: {
 }) {
   return useQuery({
     queryKey: INTEGRATIONS_KEYS.events(params),
-    queryFn: () => getSecurityEvents(params),
+    queryFn: async () => (await getSecurityEvents(params)) ?? { data: [], total: 0, page: 1, page_size: 20 },
     refetchInterval: 5000,
   });
 }
@@ -65,21 +68,21 @@ export function useSecurityEvents(params?: {
 export function useIAMRiskSignals() {
   return useQuery({
     queryKey: INTEGRATIONS_KEYS.iam(),
-    queryFn: getIAMRiskSignals,
+    queryFn: async () => (await getIAMRiskSignals()) ?? null,
   });
 }
 
 export function useCSPMRiskSignals() {
   return useQuery({
     queryKey: INTEGRATIONS_KEYS.cspm(),
-    queryFn: getCSPMRiskSignals,
+    queryFn: async () => (await getCSPMRiskSignals()) ?? null,
   });
 }
 
 export function useRiskAlerts(status?: string) {
   return useQuery({
     queryKey: INTEGRATIONS_KEYS.alerts(status),
-    queryFn: () => getAlerts(status),
+    queryFn: async () => (await getAlerts(status)) ?? { data: [], total: 0, page: 1, page_size: 20 },
     refetchInterval: 5000,
   });
 }

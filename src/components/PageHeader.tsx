@@ -16,14 +16,14 @@ export function PageHeader({
   children?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-4 border-b border-white/5 pb-5 md:flex-row md:items-end md:justify-between">
+    <div className="flex flex-col gap-4 border-b border-[#E2E8F0] pb-5 md:flex-row md:items-end md:justify-between">
       <div className="space-y-1">
         {eyebrow ? (
-          <p className="text-[11px] uppercase tracking-[0.18em] text-cyan-300/80">{eyebrow}</p>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-blue-600 font-bold">{eyebrow}</p>
         ) : null}
-        <h1 className="text-2xl font-semibold tracking-tight text-white md:text-[28px]">{title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-[28px]">{title}</h1>
         {description ? (
-          <p className="max-w-2xl text-sm leading-6 text-slate-400">{description}</p>
+          <p className="max-w-2xl text-sm leading-6 text-slate-500">{description}</p>
         ) : null}
       </div>
       <div className="flex items-center gap-2">

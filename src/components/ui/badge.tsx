@@ -10,11 +10,18 @@ export function Badge({
   variant,
   ...props
 }: BadgeProps) {
-  const variantStyles = variant === "outline" ? "border-white/20 bg-transparent text-slate-200" : "";
+  const variantStyles =
+    variant === "outline"
+      ? "border-[#E2E8F0] bg-transparent text-slate-700"
+      : variant === "secondary"
+      ? "border-[#E2E8F0] bg-slate-100 text-slate-700"
+      : variant === "destructive"
+      ? "border-red-200 bg-red-50 text-red-700"
+      : "border-[#E2E8F0] bg-slate-100 text-slate-700";
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded border border-white/10 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-slate-300",
+        "inline-flex items-center rounded border px-2 py-0.5 text-[11px] font-medium tracking-wide",
         variantStyles,
         className,
       )}

@@ -26,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${ibmSans.variable} ${ibmMono.variable} dark h-full antialiased`}
+      className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <AppProviders>

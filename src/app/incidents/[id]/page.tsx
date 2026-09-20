@@ -30,7 +30,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   return (
     <div className="space-y-5">
       <PageHeader
-        eyebrow={<Link href="/incidents" className="text-cyan-300 hover:underline">← Incidents</Link>}
+        eyebrow={<Link href="/incidents" className="text-blue-600 font-semibold hover:underline">← Incidents</Link>}
         title={incident?.title ?? "Incident"}
         description={incident?.description ?? undefined}
         actions={<IllustrativeNote />}
@@ -56,24 +56,24 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                 </SelectContent>
               </Select>
             </div>
-            <p className="mt-3 text-sm text-slate-400">
-              Modeled impact: <span className="font-mono text-white">{formatInr(Number(incident.estimated_loss))}</span>
+            <p className="mt-3 text-sm text-slate-500">
+              Modeled impact: <span className="font-mono text-slate-900 font-bold">{formatInr(Number(incident.estimated_loss))}</span>
             </p>
           </DashboardCard>
           <DashboardCard title="Affected assets">
-            <ul className="list-disc pl-4 text-sm text-slate-300">
+            <ul className="list-disc pl-4 text-sm text-slate-700">
               {(incident.affected_assets ?? []).length
                 ? (incident.affected_assets ?? []).map((asset) => <li key={asset}>{asset}</li>)
                 : <li>None recorded</li>}
             </ul>
           </DashboardCard>
           <DashboardCard title="Notes">
-            <p className="text-sm text-slate-300">{incident.description ?? "No additional notes."}</p>
+            <p className="text-sm text-slate-700">{incident.description ?? "No additional notes."}</p>
           </DashboardCard>
           <DashboardCard title="Timeline" className="lg:col-span-3">
             <ol className="space-y-2 text-sm">
               {timeline.map((item) => (
-                <li key={`${item.at}-${item.event}`} className="flex gap-4 border-b border-white/5 py-2">
+                <li key={`${item.at}-${item.event}`} className="flex gap-4 border-b border-slate-100 py-2 text-slate-800">
                   <span className="w-52 font-mono text-xs text-slate-500">{formatDateTime(item.at)}</span>
                   <span>{item.event}</span>
                 </li>

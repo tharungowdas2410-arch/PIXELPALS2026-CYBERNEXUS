@@ -22,7 +22,7 @@ export function DashboardCard({
     <Card className={cn("flex min-h-0 flex-col", className)}>
       <CardHeader className="flex flex-row items-start justify-between gap-3">
         <div>
-          <CardTitle className="text-[13px] uppercase tracking-[0.14em] text-slate-400">
+          <CardTitle className="text-[13px] uppercase tracking-[0.14em] text-slate-500 font-bold">
             {title}
           </CardTitle>
           {desc ? <CardDescription className="mt-1">{desc}</CardDescription> : null}

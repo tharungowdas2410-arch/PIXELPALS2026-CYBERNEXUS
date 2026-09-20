@@ -2,21 +2,29 @@ import { apiRequest } from "./client";
 import type { DataEnvelope } from "@/lib/types/api";
 
 export interface SecurityDomainScore {
+  domain?: string;
+  key?: string;
   score: number;
   grade: string;
+  status?: string;
+  findings_count?: number;
   weight: number;
   weighted_score: number;
   critical_controls: number;
   compliant_controls: number;
   gaps: string[];
+  explanation?: string;
 }
 
 export interface SecurityPostureResponse {
   organization_id: string;
   posture_score: number;
+  overall_posture_score?: number;
   overall_grade: string;
   status: string;
+  posture_level?: string;
   posture_timestamp: string;
+  evaluated_at?: string;
   summary_narrative: string;
   domains: Record<string, SecurityDomainScore>;
   strengths: string[];

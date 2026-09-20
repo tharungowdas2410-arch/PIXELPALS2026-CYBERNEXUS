@@ -28,19 +28,19 @@ export function EvidenceChip({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 rounded-md border border-cyan-500/20 bg-cyan-950/20 px-2.5 py-1 text-xs text-cyan-200 transition-colors hover:border-cyan-500/40",
+        "inline-flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50/60 px-2.5 py-1 text-xs text-blue-900 transition-colors hover:border-blue-300",
         className
       )}
       title={`Full SHA-256 Digest: ${hash}`}
     >
-      <ShieldCheck className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
-      <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400/80">
+      <ShieldCheck className="h-3.5 w-3.5 text-blue-600 shrink-0" />
+      <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-700">
         {sourceType}
       </span>
-      <span className="font-mono text-[11px] text-slate-300">{shortHash}</span>
+      <span className="font-mono text-[11px] text-slate-700 font-medium">{shortHash}</span>
       {verified && (
         <span
-          className="inline-flex items-center gap-0.5 text-[10px] font-medium text-emerald-400"
+          className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700"
           title="Cryptographically verified on immutable ledger"
         >
           <CheckCircle2 className="h-3 w-3" />
@@ -50,7 +50,7 @@ export function EvidenceChip({
       <button
         type="button"
         onClick={copyToClipboard}
-        className="text-slate-500 hover:text-cyan-300 transition-colors p-0.5"
+        className="text-slate-400 hover:text-blue-600 transition-colors p-0.5"
         aria-label="Copy evidence hash"
       >
         <Copy className="h-3 w-3" />

@@ -16,8 +16,8 @@ export function FinancialExposureCard({
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="font-mono text-2xl text-white">{formatInr(amountInr)}</p>
-        <p className="mt-2 text-[11px] uppercase tracking-wider text-amber-200/80">
+        <p className="font-mono text-2xl font-bold text-slate-900">{formatInr(amountInr)}</p>
+        <p className="mt-2 text-[11px] uppercase tracking-wider text-amber-700 font-medium">
           Illustrative model output
         </p>
         {caption ? <p className="mt-1 text-xs text-slate-500">{caption}</p> : null}

@@ -46,14 +46,21 @@ function classifyNode(
 
 export function toGraphPath(path: AttackPath, risks: Risk[]): GraphPath {
   const byAsset = new Map(risks.filter((item) => item.asset_id).map((item) => [item.asset_id as string, item]));
-  const nodes: AttackPathNode[] = path.nodes.map((node) => {
-    const pid = node.postgres_id ?? node.id;
+  const idMap = new Map<string, string>();
+
+  const rawNodes = path.nodes ?? [];
+  const nodes: AttackPathNode[] = rawNodes.map((node, index) => {
+    const primaryId = node.id || node.postgres_id || `node-${index}`;
+    if (node.id) idMap.set(node.id, primaryId);
+    if (node.postgres_id) idMap.set(node.postgres_id, primaryId);
+
+    const pid = node.postgres_id ?? node.id ?? primaryId;
     const risk = byAsset.get(pid);
     const residualRisk = risk?.residual_risk ?? (node.criticality ?? 3) * 20;
     const level = toUiRiskLevel(residualRisk);
     const nodeType = classifyNode(node.kind, node.exposure ?? "", node.label);
     return {
-      id: pid,
+      id: primaryId,
       label: node.label,
       type: nodeType,
       level,
@@ -65,6 +72,31 @@ export function toGraphPath(path: AttackPath, risks: Risk[]): GraphPath {
       impactInr: num(risk?.financial_exposure ?? node.financial_exposure ?? node.business_value ?? 0),
     };
   });
+
+  const nodeIds = new Set(nodes.map((n) => n.id));
+
+  let edges = (path.edges ?? [])
+    .map((edge, index) => {
+      const source = idMap.get(edge.source) ?? edge.source;
+      const target = idMap.get(edge.target) ?? edge.target;
+      return {
+        id: `${source}-${target}-${index}`,
+        source,
+        target,
+        technique: edge.relation ?? "CONNECTS_TO",
+      };
+    })
+    .filter((edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target));
+
+  if (edges.length === 0 && nodes.length >= 2) {
+    edges = nodes.slice(0, -1).map((node, i) => ({
+      id: `fallback-edge-${i}`,
+      source: node.id,
+      target: nodes[i + 1].id,
+      technique: i === 0 ? "ENTRY_ACCESS" : "LATERAL_MOVEMENT",
+    }));
+  }
+
   return {
     id: path.id,
     name: path.name,
@@ -80,12 +112,7 @@ export function toGraphPath(path: AttackPath, risks: Risk[]): GraphPath {
       path.target_label ||
       path.name,
     nodes,
-    edges: path.edges.map((edge, index) => ({
-      id: `${edge.source}-${edge.target}-${index}`,
-      source: edge.source,
-      target: edge.target,
-      technique: edge.relation ?? "CONNECTS_TO",
-    })),
+    edges,
     illustrative: true,
   };
 }

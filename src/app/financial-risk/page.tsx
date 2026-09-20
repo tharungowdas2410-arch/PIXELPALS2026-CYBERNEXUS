@@ -10,12 +10,9 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  Area,
-  AreaChart,
 } from "recharts";
 import {
   DollarSign,
-  TrendingDown,
   Activity,
   Calculator,
   ShieldAlert,
@@ -24,11 +21,8 @@ import {
   Info,
   RefreshCw,
   Sparkles,
-  Layers,
-  ArrowRight,
 } from "lucide-react";
 import { DashboardCard } from "@/components/DashboardCard";
-import { FinancialExposureCard } from "@/components/FinancialExposureCard";
 import { IllustrativeNote } from "@/components/IllustrativeNote";
 import { PageHeader } from "@/components/PageHeader";
 import { EmptyState, ErrorState, LoadingState } from "@/components/QueryStates";
@@ -252,7 +246,7 @@ export default function FinancialRiskPage() {
                         tickFormatter={(v: number) => `₹${(v / 1_00_00_000).toFixed(1)} Cr`}
                       />
                       <Tooltip
-                        formatter={(val: any) => [formatInr(Number(val)), "Modeled Loss"]}
+                        formatter={(val: unknown) => [formatInr(Number(val)), "Modeled Loss"]}
                         contentStyle={{
                           background: "#FFFFFF",
                           border: "1px solid #E2E8F0",
@@ -290,8 +284,8 @@ export default function FinancialRiskPage() {
                       />
                       <YAxis tick={{ fill: "#64748B", fontSize: 11 }} tickLine={false} axisLine={false} />
                       <Tooltip
-                        formatter={(val: any) => [val, "Trials"]}
-                        labelFormatter={(lbl: any) => `Loss Bin: ${formatInr(Number(lbl))}`}
+                        formatter={(val: unknown) => [String(val), "Trials"]}
+                        labelFormatter={(lbl: unknown) => `Loss Bin: ${formatInr(Number(lbl))}`}
                         contentStyle={{
                           background: "#FFFFFF",
                           border: "1px solid #E2E8F0",

@@ -56,7 +56,11 @@ jobs:
 
       - name: Install NPM Dependencies
         run: |
-          npm ci
+          npm ci || npm install
+
+      - name: Run Lint
+        run: |
+          npm run lint
 
       - name: Run Next.js Production Build
         run: |
